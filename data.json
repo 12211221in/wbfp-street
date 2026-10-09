@@ -1,0 +1,247 @@
+{
+ "updated_utc": "2026-10-09 00:04",
+ "day": "2026-10-08",
+ "mode": "practice",
+ "started": "2026-10-07",
+ "days": 2,
+ "total_value": 100133.32,
+ "bots": [
+  {
+   "id": "core",
+   "name": "Core (50% SPY, 50% QQQ, held)",
+   "value": 40067.17,
+   "share": 0.4001,
+   "cash": 800.02,
+   "return": 0.00165,
+   "worst_drop": 0.0,
+   "day_change": 0.00165,
+   "holdings": {
+    "QQQ": {
+     "shares": 26.244304,
+     "value": 19641.24
+    },
+    "SPY": {
+     "shares": 25.346642,
+     "value": 19625.91
+    }
+   },
+   "traded_today": true
+  },
+  {
+   "id": "trend",
+   "name": "Trend (SPY and QQQ, 200-day filter)",
+   "value": 15025.19,
+   "share": 0.1501,
+   "cash": 300.01,
+   "return": 0.00165,
+   "worst_drop": 0.0,
+   "day_change": 0.00165,
+   "holdings": {
+    "QQQ": {
+     "shares": 9.841614,
+     "value": 7365.46
+    },
+    "SPY": {
+     "shares": 9.504991,
+     "value": 7359.71
+    }
+   },
+   "traded_today": true
+  },
+  {
+   "id": "dip",
+   "name": "Dip buyer (RSI on SPY, QQQ, AAPL)",
+   "value": 15000.43,
+   "share": 0.1498,
+   "cash": 15000.43,
+   "return": 0.0,
+   "worst_drop": 0.0,
+   "day_change": 0.0,
+   "holdings": {},
+   "traded_today": false
+  },
+  {
+   "id": "rotation",
+   "name": "Rotation (top 3 of 19 ETFs)",
+   "value": 15028.7,
+   "share": 0.1501,
+   "cash": 300.01,
+   "return": 0.00189,
+   "worst_drop": 0.0,
+   "day_change": 0.00189,
+   "holdings": {
+    "EEM": {
+     "shares": 74.250165,
+     "value": 4901.25
+    },
+    "QQQ": {
+     "shares": 6.561076,
+     "value": 4910.31
+    },
+    "XLK": {
+     "shares": 24.807693,
+     "value": 4917.13
+    }
+   },
+   "traded_today": true
+  },
+  {
+   "id": "balanced",
+   "name": "Balanced (60% SPY, 40% bonds)",
+   "value": 15011.83,
+   "share": 0.1499,
+   "cash": 300.01,
+   "return": 0.00076,
+   "worst_drop": 0.0,
+   "day_change": 0.00076,
+   "holdings": {
+    "IEF": {
+     "shares": 65.722226,
+     "value": 5880.17
+    },
+    "SPY": {
+     "shares": 11.405989,
+     "value": 8831.66
+    }
+   },
+   "traded_today": true
+  }
+ ],
+ "benchmark": {
+  "id": "spy",
+  "name": "SPY buy and hold",
+  "return": -0.00386,
+  "worst_drop": -0.00386
+ },
+ "recent": [
+  {
+   "recorded_utc": "2026-10-08 19:55",
+   "day": "2026-10-08",
+   "bot": "rotation",
+   "entry": "buy",
+   "symbol": "XLK",
+   "shares": "24.807693",
+   "price": "197.5250",
+   "cash_after": "300.01",
+   "note": ""
+  },
+  {
+   "recorded_utc": "2026-10-08 19:55",
+   "day": "2026-10-08",
+   "bot": "balanced",
+   "entry": "buy",
+   "symbol": "SPY",
+   "shares": "11.405989",
+   "price": "773.3000",
+   "cash_after": "300.01",
+   "note": ""
+  },
+  {
+   "recorded_utc": "2026-10-08 19:55",
+   "day": "2026-10-08",
+   "bot": "trend",
+   "entry": "buy",
+   "symbol": "SPY",
+   "shares": "9.504991",
+   "price": "773.3000",
+   "cash_after": "300.01",
+   "note": ""
+  },
+  {
+   "recorded_utc": "2026-10-08 19:55",
+   "day": "2026-10-08",
+   "bot": "core",
+   "entry": "buy",
+   "symbol": "SPY",
+   "shares": "25.346642",
+   "price": "773.3000",
+   "cash_after": "800.02",
+   "note": ""
+  },
+  {
+   "recorded_utc": "2026-10-08 19:55",
+   "day": "2026-10-08",
+   "bot": "rotation",
+   "entry": "buy",
+   "symbol": "QQQ",
+   "shares": "6.561076",
+   "price": "746.8500",
+   "cash_after": "5200.15",
+   "note": ""
+  },
+  {
+   "recorded_utc": "2026-10-08 19:55",
+   "day": "2026-10-08",
+   "bot": "trend",
+   "entry": "buy",
+   "symbol": "QQQ",
+   "shares": "9.841614",
+   "price": "746.8500",
+   "cash_after": "7650.22",
+   "note": ""
+  },
+  {
+   "recorded_utc": "2026-10-08 19:55",
+   "day": "2026-10-08",
+   "bot": "core",
+   "entry": "buy",
+   "symbol": "QQQ",
+   "shares": "26.244304",
+   "price": "746.8500",
+   "cash_after": "20400.58",
+   "note": ""
+  },
+  {
+   "recorded_utc": "2026-10-08 19:55",
+   "day": "2026-10-08",
+   "bot": "balanced",
+   "entry": "buy",
+   "symbol": "IEF",
+   "shares": "65.722226",
+   "price": "89.4700",
+   "cash_after": "9120.26",
+   "note": ""
+  },
+  {
+   "recorded_utc": "2026-10-08 19:55",
+   "day": "2026-10-08",
+   "bot": "rotation",
+   "entry": "buy",
+   "symbol": "EEM",
+   "shares": "74.250165",
+   "price": "65.9950",
+   "cash_after": "10100.29",
+   "note": ""
+  }
+ ],
+ "curve": {
+  "days": [
+   "2026-10-07",
+   "2026-10-08"
+  ],
+  "core": [
+   1.0,
+   1.00165
+  ],
+  "trend": [
+   1.0,
+   1.00165
+  ],
+  "dip": [
+   1.0,
+   1.0
+  ],
+  "rotation": [
+   1.0,
+   1.00189
+  ],
+  "balanced": [
+   1.0,
+   1.00076
+  ],
+  "spy": [
+   1.0,
+   0.99614
+  ]
+ }
+}

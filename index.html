@@ -1,0 +1,1035 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><style>html,body{margin:0}</style></head><body><title>WBFP Street</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500&family=Playfair+Display:wght@700;900&display=swap">
+<style>
+/* Layout: ticker tape, then one big 3D penthouse trading floor over the city, then the selected bot's file, the big board and the trade tickets. One committed look: banker's green, brass and ivory. */
+:root{
+  color-scheme: dark;
+  --bg:#0a1310; --panel:#0f1b17; --line:#253a32;
+  --gold:#c8a55a; --gold-deep:#8f7334; --ivory:#efe8d8; --dim:#93a59c;
+  --up:#4fd08c; --down:#ef6a5e; --mid:#e3b04b;
+  --paper:#f4efe2; --paper-ink:#221d14;
+  --display:"Playfair Display",Georgia,"Times New Roman",serif;
+  --body:"IBM Plex Sans","Helvetica Neue",Arial,sans-serif;
+  --mono:"IBM Plex Mono","Courier New",monospace;
+}
+*{box-sizing:border-box}
+html{background:var(--bg)}
+body{background:var(--bg);color:var(--ivory);font-family:var(--body);font-size:16px;line-height:1.45;overflow-x:clip}
+.wrap{max-width:1240px;margin:0 auto;padding-inline:16px;padding-block:20px 44px;display:flex;flex-direction:column;gap:22px}
+
+.tape{border-block:1px solid var(--line);background:#060c0a;overflow:hidden;white-space:nowrap;font-family:var(--mono);font-size:14px;letter-spacing:.04em}
+.tape-run{display:inline-block;padding-block:8px;animation:tape 56s linear infinite}
+.tape-run span{margin-right:40px;color:var(--ivory)}
+.tape-run b{font-weight:500}
+.up{color:var(--up)} .down{color:var(--down)} .mid{color:var(--mid)}
+@keyframes tape{to{transform:translateX(-50%)}}
+
+.top{display:flex;flex-wrap:wrap;gap:18px;align-items:flex-end;justify-content:space-between}
+.top h1{font-family:var(--display);font-weight:900;font-size:clamp(34px,6vw,64px);line-height:1;margin:0;color:var(--gold);letter-spacing:.01em}
+.top p{margin:10px 0 0;color:var(--dim);max-width:52ch}
+.draft{font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:var(--gold);border:1px solid var(--gold-deep);padding:4px 8px;display:inline-block;margin-top:12px}
+.status{border:1px solid var(--line);background:var(--panel);padding:10px 14px;min-width:0;font-family:var(--mono);font-size:14px;font-variant-numeric:tabular-nums}
+.status div{display:flex;gap:18px;justify-content:space-between}
+.status .k{color:var(--dim)}
+
+.stage{position:relative;border:1px solid var(--gold-deep);background:#05080a;aspect-ratio:16/9;overflow:hidden;touch-action:pan-y;cursor:grab;max-width:100%}
+.stage.dragging{cursor:grabbing}
+.stage canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+@media (max-width:640px){.stage{aspect-ratio:1/1}.bubble{font-size:13px;max-width:180px}}
+.tag{position:absolute;transform:translate(-50%,-100%);font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:.14em;
+  background:rgba(8,14,12,.82);color:var(--gold);border:1px solid var(--gold);padding:3px 8px;cursor:pointer;white-space:nowrap;z-index:2}
+.tag[aria-pressed="true"]{background:var(--gold);color:#1c1608}
+.tag:focus-visible,.tag:hover{outline:2px solid var(--ivory);outline-offset:2px}
+.bubble{position:absolute;transform:translate(-50%,-100%);max-width:min(250px,60%);background:var(--paper);color:var(--paper-ink);
+  padding:8px 12px;line-height:1.25;font-size:15px;border-radius:10px;box-shadow:0 6px 18px rgba(0,0,0,.45);pointer-events:none;z-index:3;text-align:center}
+.bubble::after{content:"";position:absolute;left:50%;bottom:-7px;width:14px;height:14px;background:var(--paper);transform:translateX(-50%) rotate(45deg)}
+.hint{position:absolute;left:10px;bottom:10px;font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:var(--ivory);
+  background:rgba(8,14,12,.7);padding:4px 8px;pointer-events:none;z-index:4}
+.views{position:absolute;right:10px;top:10px;display:flex;flex-wrap:wrap;justify-content:flex-end;gap:6px;z-index:4;max-width:calc(100% - 20px)}
+.views button{font-family:var(--mono);font-size:11px;letter-spacing:.1em;background:rgba(8,14,12,.78);color:var(--ivory);border:1px solid var(--gold-deep);padding:6px 10px;cursor:pointer}
+.views button[aria-pressed="true"]{background:var(--gold);color:#1c1608;border-color:var(--gold)}
+.views button:focus-visible,.views button:hover{outline:2px solid var(--ivory);outline-offset:2px}
+.nogl{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:20px;color:var(--gold)}
+
+.lower{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,320px),1fr));gap:18px;align-items:start}
+.panel{border:1px solid var(--line);background:var(--panel);padding:18px;min-width:0}
+.panel h2{font-family:var(--mono);font-weight:500;font-size:12px;letter-spacing:.18em;margin:0 0 14px;color:var(--dim)}
+.dossier h3{font-family:var(--display);font-weight:700;font-size:28px;line-height:1.1;margin:0 0 4px;color:var(--ivory)}
+.dossier .job{color:var(--dim);margin:0 0 14px}
+.badge{font-family:var(--mono);font-size:11px;letter-spacing:.12em;padding:3px 8px;background:var(--gold);color:#1c1608;display:inline-block;margin-bottom:10px}
+.badge.last{background:var(--down);color:#2b0703}
+.stats{display:grid;grid-template-columns:auto 1fr;gap:4px 14px;margin:0 0 10px;font-family:var(--mono);font-size:14px;font-variant-numeric:tabular-nums}
+.stats dt{color:var(--dim)} .stats dd{margin:0;text-align:right}
+.bar{height:6px;background:#060c0a;border:1px solid var(--line);margin-bottom:12px}
+.bar i{display:block;height:100%;background:var(--gold)}
+.today{border-top:1px solid var(--line);padding-top:10px;margin:0}
+.switch{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+.switch button{font-family:var(--mono);font-size:12px;letter-spacing:.1em;background:transparent;color:var(--dim);border:1px solid var(--line);padding:6px 12px;cursor:pointer}
+.switch button[aria-pressed="true"]{background:var(--gold);color:#1c1608;border-color:var(--gold)}
+.switch button:focus-visible,.switch button:hover{outline:2px solid var(--ivory);outline-offset:2px}
+.scroll{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-family:var(--mono);font-size:14px;font-variant-numeric:tabular-nums}
+th{font-weight:400;color:var(--dim);text-align:right;padding:4px 6px;border-bottom:1px solid var(--line);white-space:nowrap}
+td{text-align:right;padding:7px 6px;border-bottom:1px solid var(--line);white-space:nowrap}
+th:nth-child(2),td:nth-child(2){text-align:left}
+tbody tr{cursor:pointer}
+tbody tr:hover td{background:#13231d}
+tr.bench td:nth-child(2){color:var(--gold)}
+.sheet{background:var(--paper);color:var(--paper-ink);padding:12px 14px 16px;min-height:236px;overflow:hidden;font-family:var(--mono);font-size:13px}
+.sheet ol{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:7px}
+.sheet li{border-bottom:1px dashed #b3a98f;padding-bottom:6px;animation:feed .45s ease-out}
+.sheet time{color:#7a705a}
+@keyframes feed{from{transform:translateY(-18px);opacity:0}}
+.note{color:var(--dim);margin:0;max-width:70ch;font-size:14px}
+@media (prefers-reduced-motion:reduce){.tape-run,.sheet li{animation:none}.tape{white-space:normal}}
+</style>
+
+<div class="tape" aria-hidden="true"><div class="tape-run" id="tape"></div></div>
+
+<div class="wrap">
+  <header class="top">
+    <div>
+      <h1>WBFP Street</h1>
+      <p>Five bots in good suits, one paper account, and a ficus named Joel to beat. Sixtieth floor, corner of ambition and overconfidence.</p>
+      <span class="draft" id="modechip">OPENING THE BOOKS</span>
+    </div>
+    <div class="status">
+      <div><span class="k">NEW YORK</span><span id="clock">--:--:--</span></div>
+      <div><span class="k">MARKET</span><span id="market">--</span></div>
+      <div><span class="k">BOOKS</span><span id="acct">--</span></div>
+      <div><span class="k">UPDATED</span><span id="asof">--</span></div>
+    </div>
+  </header>
+
+  <section class="stage" id="stage" aria-label="3D trading floor at the top of a skyscraper, one desk per bot. Drag to look around.">
+    <div class="bubble" id="bubble" hidden></div>
+    <div class="views" role="group" aria-label="Camera view">
+      <button type="button" id="v-above" aria-pressed="true">FROM ABOVE</button>
+      <button type="button" id="v-floor" aria-pressed="false">FLOOR LEVEL</button>
+      <button type="button" id="v-whole" hidden>WHOLE FLOOR</button>
+    </div>
+    <div class="hint" id="hint">DRAG TO LOOK AROUND / TAP A NAME TO VISIT AN OFFICE</div>
+  </section>
+
+  <section class="lower">
+    <div class="panel dossier" aria-live="polite">
+      <h2>PERSONNEL FILE</h2>
+      <div id="dossier"></div>
+    </div>
+    <div class="panel">
+      <h2>THE BIG BOARD</h2>
+      <div class="switch" role="group" aria-label="Rank the board by">
+        <button type="button" id="by-return" aria-pressed="true">BY RETURN</button>
+        <button type="button" id="by-drop" aria-pressed="false">BY WORST DROP</button>
+      </div>
+      <div class="scroll">
+        <table>
+          <thead><tr><th>#</th><th>DESK</th><th>SINCE START</th><th>VS JOEL</th><th>WORST DROP</th></tr></thead>
+          <tbody id="board"></tbody>
+        </table>
+      </div>
+    </div>
+    <div class="panel">
+      <h2>TRADE TICKETS</h2>
+      <div class="sheet"><ol id="fax"></ol></div>
+    </div>
+  </section>
+
+  <p class="note" id="note">Every number here comes from the bots' ledgers, updated each hour the market is open. Returns count from the day the books opened. Joel holds SPY, bought on day one and never touched.</p>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(function(){
+  var BOTS = [
+    {id:"core", tag:"NICK", name:"Nick", job:"Core bot. 50% SPY, 50% QQQ, never sells.", ret:0, drop:0, share:0,
+     state:"feet", today:"Waiting for the books.", look:{skin:0xe2b08c,hair:0x3a2a1c,style:"slick",suit:0x1b2a4a,tie:0xc8a55a},
+     quips:["Buy. Then do nothing. It's an art.","Selling is for people with doubts.","Wake me when it's 2036."]},
+    {id:"trend", tag:"TRISTAN", name:"Tristan", job:"Trend bot. Sells anything below its 200-day average.", ret:0, drop:0, share:0,
+     state:"phone", today:"Waiting for the books.", look:{skin:0xd9a070,hair:0x15110e,style:"slick",suit:0x2f3238,stripe:true,tie:0xb3262b},
+     quips:["SELL! No wait. BUY! No. SELL!","The trend is my friend. My only friend.","Get me out before lunch!"]},
+    {id:"dip", tag:"MYLES", name:"Myles", job:"Dip buyer. Waits for a sharp drop, then pounces.", ret:0, drop:0, share:0,
+     state:"despair", today:"Waiting for the books.", look:{skin:0xf0c4a0,hair:0x6b4a2a,style:"bald",suit:0x6b5238,tie:0x2e8b57,glasses:true},
+     quips:["Is this a dip? Is THIS a dip?","Cash is a position. Cash is a position.","I'll buy tomorrow. Probably."]},
+    {id:"rotation", tag:"KOBY", name:"Koby", job:"Rotation bot. Chases last month's top three funds.", ret:0, drop:0, share:0,
+     state:"swivel", today:"Waiting for the books.", look:{skin:0xe2b08a,hair:0xd9b65a,style:"pomp",suit:0x8a8f99,tie:0xd4578f},
+     quips:["This month it's gold, baby.","New month, new me, new funds.","I was into tech before it was up."]},
+    {id:"balanced", tag:"ELI", name:"Eli", job:"Balanced bot. 60% SPY, 40% bonds.", ret:0, drop:0, share:0,
+     state:"type", today:"Waiting for the books.", look:{skin:0xecc4a4,hair:0xe6e6e6,style:"side",suit:0x1f3d33,tie:0x22305c,glasses:true},
+     quips:["Bonds are exciting if you let them be.","Slow and steady files the paperwork.","I brought my own mug."]},
+    {id:"spy", tag:"JOEL", name:"Joel", job:"The benchmark. A ficus holding SPY, bought once, never touched.", ret:0, drop:0, share:0,
+     state:"plant", today:"Waiting for the books.", plant:true,
+     quips:["...","(rustles confidently)","..."]}
+  ];
+  var SPY = BOTS[5], mode = "return", selected = "core";
+  var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var $ = function(id){ return document.getElementById(id); };
+
+  function fmt(x){ return (x > 0 ? "+" : "") + x.toFixed(2) + "%"; }
+  function tone(b){ if (b.plant) return b.ret >= 0 ? "up" : "down"; return b.ret >= SPY.ret ? "up" : b.ret > 0 ? "mid" : "down"; }
+  function order(){ return BOTS.slice().sort(function(a,b){ return mode === "return" ? b.ret - a.ret : b.drop - a.drop; }); }
+  function roleOf(b){ var o = order(), i = o.indexOf(b); return i === 0 ? "top" : i === o.length - 1 ? "last" : "mid"; }
+  function byId(id){ for (var i = 0; i < BOTS.length; i++) if (BOTS[i].id === id) return BOTS[i]; }
+
+  /* ---------- panels ---------- */
+  function tape(){
+    var bits = "";
+    BOTS.forEach(function(b){
+      var d = b.ret - SPY.ret;
+      bits += "<span>" + b.tag + " <b class='" + tone(b) + "'>" + fmt(b.ret) + "</b>" +
+        (b.plant ? "" : " <b class='" + (d >= 0 ? "up" : "down") + "'>" + (d >= 0 ? "&#9650;" : "&#9660;") + " " + Math.abs(d).toFixed(2) + " VS JOEL</b>") + "</span>";
+    });
+    bits += "<span>ESPRESSO <b class='down'>&#9660; EMPTY</b></span><span>CUFFLINKS <b class='up'>&#9650; POLISHED</b></span>";
+    $("tape").innerHTML = bits + bits;
+  }
+  tape();
+
+  function dossier(){
+    var b = byId(selected), role = roleOf(b);
+    $("dossier").innerHTML =
+      (role === "mid" ? "" : "<span class='badge" + (role === "last" ? " last" : "") + "'>" + (role === "top" ? "CORNER OFFICE" : "DESK BY THE COPIER") + "</span>") +
+      "<h3>" + b.name + "</h3><p class='job'>" + b.job + "</p>" +
+      "<dl class='stats'><dt>SINCE START</dt><dd class='" + tone(b) + "'>" + fmt(b.ret) + "</dd>" +
+      "<dt>WORST DROP</dt><dd>" + fmt(b.drop) + "</dd>" +
+      "<dt>TODAY</dt><dd class='" + ((b.day || 0) >= 0 ? "up" : "down") + "'>" + fmt(b.day || 0) + "</dd>" +
+      "<dt>VALUE</dt><dd>" + (b.plant ? "--" : "$" + (b.value || 0).toLocaleString("en-US", {maximumFractionDigits:0})) + "</dd>" +
+      "<dt>SHARE OF ACCOUNT</dt><dd>" + (b.plant ? "NONE (PAPER ONLY)" : b.share + "%") + "</dd></dl>" +
+      (b.plant ? "" : "<div class='bar' aria-hidden='true'><i style='width:" + b.share + "%'></i></div>") +
+      "<p class='today'>" + b.today + "</p>";
+  }
+  function board(){
+    var html = "";
+    order().forEach(function(b, i){
+      html += "<tr data-id='" + b.id + "'" + (b.plant ? " class='bench'" : "") + "><td>" + (i+1) + "</td><td>" + b.name + "</td>" +
+        "<td class='" + tone(b) + "'>" + fmt(b.ret) + "</td><td>" + (b.plant ? "--" : fmt(b.ret - SPY.ret)) + "</td><td>" + fmt(b.drop) + "</td></tr>";
+    });
+    $("board").innerHTML = html;
+    $("by-return").setAttribute("aria-pressed", mode === "return");
+    $("by-drop").setAttribute("aria-pressed", mode === "drop");
+  }
+  function refresh(){ board(); dossier(); tape(); if (world) world.sync(); }
+  function select(id){ selected = id; refresh(); if (world) world.focus(id); }
+  $("by-return").addEventListener("click", function(){ mode = "return"; refresh(); });
+  $("by-drop").addEventListener("click", function(){ mode = "drop"; refresh(); });
+  $("board").addEventListener("click", function(e){ var tr = e.target.closest("tr"); if (tr) select(tr.getAttribute("data-id")); });
+
+  var TAG = {core:"NICK", trend:"TRISTAN", dip:"MYLES", rotation:"KOBY", balanced:"ELI", spy:"JOEL"};
+  var seenStamp = null;
+  function tickets(rows){
+    var html = "", fresh = [];
+    rows.filter(function(r){ return r.entry === "buy" || r.entry === "sell"; }).slice(0, 6).forEach(function(r){
+      var shares = parseFloat(r.shares), price = parseFloat(r.price);
+      html += "<li><time>" + r.day.slice(5) + " " + r.recorded_utc.slice(11) + " UTC</time> <b>" + (TAG[r.bot] || r.bot) + "</b> " +
+        (r.entry === "buy" ? "bought " : "sold ") + "$" + Math.round(shares * price).toLocaleString("en-US") + " of " + r.symbol + " at $" + price.toFixed(2) + "</li>";
+    });
+    rows.filter(function(r){ return r.entry === "transfer in" || r.entry === "transfer out"; }).slice(0, 2).forEach(function(r){
+      html += "<li><time>" + r.day.slice(5) + "</time> <b>" + (TAG[r.bot] || r.bot) + "</b> " + r.note + "</li>";
+    });
+    if (!html) html = "<li>No trades yet. The first run of the day is at 9:50am New York time.</li>";
+    if (seenStamp !== null) rows.forEach(function(r){ if (r.recorded_utc > seenStamp && (r.entry === "buy" || r.entry === "sell") && fresh.indexOf(r.bot) < 0) fresh.push(r.bot); });
+    seenStamp = rows.length ? rows[0].recorded_utc : "";
+    $("fax").innerHTML = html;
+    return fresh;
+  }
+
+  var now = {h:0, m:0, s:0};
+  function clock(){
+    var parts = {}, f = new Intl.DateTimeFormat("en-US", {timeZone:"America/New_York", hour12:false, weekday:"short", hour:"2-digit", minute:"2-digit", second:"2-digit"});
+    f.formatToParts(new Date()).forEach(function(p){ parts[p.type] = p.value; });
+    var h = parseInt(parts.hour, 10) % 24, m = parseInt(parts.minute, 10), mins = h * 60 + m;
+    $("clock").textContent = (h < 10 ? "0" : "") + h + ":" + parts.minute + ":" + parts.second;
+    var open = ["Sat","Sun"].indexOf(parts.weekday) < 0 && mins >= 570 && mins < 960;
+    $("market").textContent = open ? "OPEN" : "CLOSED";
+    $("market").className = open ? "up" : "down";
+    now = {h:h, m:m, s:parseInt(parts.second, 10)};
+  }
+  clock(); setInterval(clock, 1000);
+
+
+  /* ---------- the ledgers ---------- */
+  function nyTime(utc){
+    try {
+      var d = new Date(utc.replace(" ", "T") + ":00Z");
+      return new Intl.DateTimeFormat("en-US", {timeZone:"America/New_York", month:"short", day:"numeric", hour:"numeric", minute:"2-digit"}).format(d) + " ET";
+    } catch (e) { return utc + " UTC"; }
+  }
+  function todayLine(b, rows, day){
+    var mine = rows.filter(function(r){ return r.bot === b.id && r.day === day && (r.entry === "buy" || r.entry === "sell"); });
+    if (!mine.length) return "No trades today. Holding " + (Object.keys(b.holdings || {}).join(", ") || "cash") + ".";
+    var bought = [], sold = [];
+    mine.forEach(function(r){ var list = r.entry === "buy" ? bought : sold; if (list.indexOf(r.symbol) < 0) list.push(r.symbol); });
+    return ((bought.length ? "Bought " + bought.join(", ") + ". " : "") + (sold.length ? "Sold " + sold.join(", ") + "." : "")).trim();
+  }
+  var firstLoad = true;
+  function applyData(d){
+    var rows = d.recent || [], day = d.day || (rows[0] && rows[0].day) || "";
+    d.bots.forEach(function(x){
+      var b = byId(x.id); if (!b) return;
+      b.ret = x["return"] * 100; b.drop = x.worst_drop * 100; b.share = Math.round(x.share * 100); b.day = x.day_change * 100;
+      b.value = x.value; b.holdings = x.holdings; b.today = todayLine(b, rows, day);
+      b.quips = [(b.ret >= 0 ? "Up " : "Down ") + Math.abs(b.ret).toFixed(2) + "% since day one."].concat(b.baseQuips);
+    });
+    SPY.ret = d.benchmark["return"] * 100; SPY.drop = d.benchmark.worst_drop * 100;
+    SPY.today = "Did nothing. " + (SPY.ret >= 0 ? "Up " : "Down ") + Math.abs(SPY.ret).toFixed(2) + "% anyway.";
+    SPY.quips = ["(rustles " + (SPY.ret >= 0 ? "smugly" : "quietly") + ")"].concat(SPY.baseQuips);
+    $("modechip").textContent = d.mode === "live" ? "LIVE PAPER ACCOUNT" : "PRACTICE MONEY, REAL PRICES";
+    $("acct").textContent = "$" + d.total_value.toLocaleString("en-US", {maximumFractionDigits:0});
+    $("asof").textContent = nyTime(d.updated_utc);
+    var fresh = tickets(rows);
+    refresh();
+    if (world){
+      if (firstLoad) d.bots.forEach(function(x){ if (x.traded_today) world.react(x.id, "trade"); });
+      else fresh.forEach(function(id){ world.react(id, "trade"); });
+    }
+    firstLoad = false;
+  }
+  BOTS.forEach(function(b){ b.baseQuips = b.quips.slice(); });
+  function load(){
+    fetch("data.json", {cache:"no-store"}).then(function(r){ if (!r.ok) throw new Error(r.status); return r.json(); })
+      .then(applyData)
+      .catch(function(){ $("modechip").textContent = "BOOKS NOT REACHABLE"; tickets([]); });
+  }
+  /* ---------- the 3D floor ---------- */
+  var world = null;
+  try { world = build(); } catch (err) {
+    var msg = document.createElement("div"); msg.className = "nogl";
+    msg.textContent = "The 3D floor needs WebGL, which this browser has switched off. The panels below still work.";
+    $("stage").appendChild(msg); $("hint").hidden = true;
+  }
+  refresh();
+  load(); setInterval(load, 5 * 60 * 1000);
+
+  function build(){
+    var T = window.THREE; if (!T) throw new Error("no three");
+    var stage = $("stage"), small = stage.clientWidth < 640;
+    var renderer = new T.WebGLRenderer({antialias:true});
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, small ? 1.5 : 2));
+    renderer.outputEncoding = T.sRGBEncoding;
+    renderer.toneMapping = T.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.2;
+    renderer.shadowMap.enabled = true; renderer.shadowMap.type = T.PCFSoftShadowMap;
+    stage.insertBefore(renderer.domElement, stage.firstChild);
+    var scene = new T.Scene();
+    var camera = new T.PerspectiveCamera(38, 16/9, 0.5, 1600);
+    scene.fog = new T.FogExp2(0x2c2444, 0.0024);
+
+    /* helpers */
+    var mc = {};
+    function S(c, r, m){
+      var k = c + "/" + r + "/" + m;
+      if (!mc[k]){ mc[k] = new T.MeshStandardMaterial({color:c, roughness:r == null ? 0.75 : r, metalness:m || 0}); mc[k].color.convertSRGBToLinear(); }
+      return mc[k];
+    }
+    function U(c, r, m){ var mt = new T.MeshStandardMaterial({color:c, roughness:r, metalness:m || 0}); mt.color.convertSRGBToLinear(); return mt; }
+    function shade(c, f){ return (Math.round(((c >> 16) & 255) * f) << 16) | (Math.round(((c >> 8) & 255) * f) << 8) | Math.round((c & 255) * f); }
+    function mk(parent, geo, mat, x, y, z){
+      var m = new T.Mesh(geo, typeof mat === "number" ? S(mat) : mat);
+      m.position.set(x, y, z); m.castShadow = true; m.receiveShadow = true; parent.add(m); return m;
+    }
+    function box(p, w, h, d, mat, x, y, z){ return mk(p, new T.BoxGeometry(w, h, d), mat, x, y, z); }
+    function cyl(p, rt, rb, h, mat, x, y, z, seg){ return mk(p, new T.CylinderGeometry(rt, rb, h, seg || 16), mat, x, y, z); }
+    function ball(p, r, mat, x, y, z, sx, sy, sz){ var m = mk(p, new T.SphereGeometry(r, 18, 14), mat, x, y, z); if (sx) m.scale.set(sx, sy, sz); return m; }
+    function tex(w, h){
+      var c = document.createElement("canvas"); c.width = w; c.height = h;
+      var t = new T.CanvasTexture(c); t.encoding = T.sRGBEncoding;
+      return {c:c, g:c.getContext("2d"), t:t};
+    }
+    function screen(parent, w, h, tx, x, y, z){
+      var m = new T.Mesh(new T.PlaneGeometry(w, h), new T.MeshBasicMaterial({map:tx.t, toneMapped:false, fog:false}));
+      m.position.set(x, y, z); parent.add(m); return m;
+    }
+    var seedN = 11;
+    function rnd(){ seedN = (seedN * 16807) % 2147483647; return seedN / 2147483647; }
+
+    /* dusk sky, used both as the backdrop and for reflections */
+    var sky = tex(8, 512), sg = sky.g.createLinearGradient(0, 0, 0, 512);
+    [[0,"#070b22"],[0.3,"#1b2150"],[0.43,"#5a3a6e"],[0.485,"#e8804a"],[0.5,"#ffc27a"],[0.515,"#6a4660"],[0.6,"#1a1626"],[1,"#07080c"]]
+      .forEach(function(s){ sg.addColorStop(s[0], s[1]); });
+    sky.g.fillStyle = sg; sky.g.fillRect(0, 0, 8, 512);
+    var dome = new T.Mesh(new T.SphereGeometry(1200, 24, 16), new T.MeshBasicMaterial({map:sky.t, side:T.BackSide, fog:false}));
+    scene.add(dome);
+    try {
+      var pm = new T.PMREMGenerator(renderer), es = new T.Scene();
+      es.add(new T.Mesh(new T.SphereGeometry(50, 24, 16), new T.MeshBasicMaterial({map:sky.t, side:T.BackSide})));
+      scene.environment = pm.fromScene(es, 0.04).texture;
+    } catch (e) {}
+
+    /* light: low sun through the glass, soft fill from the camera side */
+    scene.add(new T.HemisphereLight(0x9fb0ff, 0x3a2c22, 0.75));
+    var sun = new T.DirectionalLight(0xffa860, 2.3); sun.position.set(-34, 20, -40); sun.castShadow = true;
+    sun.shadow.mapSize.set(small ? 1024 : 2048, small ? 1024 : 2048);
+    sun.shadow.camera.left = -30; sun.shadow.camera.right = 30; sun.shadow.camera.top = 24; sun.shadow.camera.bottom = -24;
+    sun.shadow.camera.near = 5; sun.shadow.camera.far = 150; sun.shadow.bias = -0.0006;
+    scene.add(sun);
+    var fill = new T.DirectionalLight(0xfff1e0, 1.0); fill.position.set(12, 14, 22); scene.add(fill);
+
+    /* the city */
+    function windows(lit){
+      var w = tex(64, 128); w.g.fillStyle = "#0b0d14"; w.g.fillRect(0, 0, 64, 128);
+      var cols = ["#ffd98a","#ffe9b8","#bcd6ff","#ffc76a","#fff3d6"];
+      for (var r = 0; r < 16; r++) for (var c = 0; c < 8; c++) if (rnd() < lit){
+        w.g.fillStyle = cols[Math.floor(rnd() * cols.length)]; w.g.fillRect(c*8 + 2, r*8 + 2, 4, 5);
+      }
+      w.t.wrapS = w.t.wrapT = T.RepeatWrapping; return w.t;
+    }
+    function towerMat(rx, ry, lit){
+      var t = windows(lit); t.repeat.set(rx, ry);
+      var m = new T.MeshStandardMaterial({color:0x0e1119, roughness:0.75, emissive:0xffffff, emissiveMap:t, emissiveIntensity:0.95});
+      return m;
+    }
+    var unit = new T.BoxGeometry(1, 1, 1); unit.translate(0, 0.5, 0);
+    var BASE = -78, dummy = new T.Object3D();
+    [{n:150, h:[26,48], rep:[3,5], lit:0.26}, {n:110, h:[48,74], rep:[3,8], lit:0.3}, {n:46, h:[76,118], rep:[2,13], lit:0.34}].forEach(function(cl){
+      var mesh = new T.InstancedMesh(unit, towerMat(cl.rep[0], cl.rep[1], cl.lit), cl.n), k = 0, guard = 0;
+      while (k < cl.n && guard++ < 5000){
+        var x = -360 + rnd() * 640, z = -460 + rnd() * 540;
+        if (Math.abs(x) < 30 && Math.abs(z) < 24) continue;
+        if (cl.h[1] > 50 && ((Math.abs(x) < 54 && z > -46) || (x > -52 && z > -28))) continue;
+        dummy.position.set(x, BASE, z); dummy.rotation.y = rnd() < 0.2 ? 0.5 : 0;
+        dummy.scale.set(9 + rnd() * 10, cl.h[0] + rnd() * (cl.h[1] - cl.h[0]), 9 + rnd() * 10);
+        dummy.updateMatrix(); mesh.setMatrixAt(k++, dummy.matrix);
+      }
+      mesh.count = k; mesh.instanceMatrix.needsUpdate = true; mesh.frustumCulled = false; scene.add(mesh);
+    });
+    var heroMat = towerMat(2, 16, 0.38), steel = S(0x2a2f3d, 0.4, 0.6);
+    [[-78,-120,150,17],[44,-175,138,15],[-165,-52,128,16],[-20,-250,160,18]].forEach(function(t){
+      var g = new T.Group(); g.position.set(t[0], BASE, t[1]); scene.add(g);
+      var a = new T.Mesh(unit, heroMat); a.scale.set(t[3], t[2]*0.7, t[3]); g.add(a);
+      var b = new T.Mesh(unit, heroMat); b.scale.set(t[3]*0.7, t[2]*0.2, t[3]*0.7); b.position.y = t[2]*0.7; g.add(b);
+      var c = new T.Mesh(unit, heroMat); c.scale.set(t[3]*0.42, t[2]*0.1, t[3]*0.42); c.position.y = t[2]*0.9; g.add(c);
+      var sp = new T.Mesh(new T.CylinderGeometry(0, t[3]*0.14, t[2]*0.2, 6), steel); sp.position.y = t[2]*1.1; g.add(sp);
+    });
+    var st = tex(128, 128); st.g.fillStyle = "#05060a"; st.g.fillRect(0, 0, 128, 128);
+    st.g.fillStyle = "#ff9a3c"; st.g.fillRect(0, 62, 128, 3); st.g.fillRect(62, 0, 3, 128);
+    st.g.fillStyle = "#ffe2b0"; for (var i = 0; i < 26; i++){ st.g.fillRect(Math.floor(rnd()*128), 63, 2, 1); st.g.fillRect(63, Math.floor(rnd()*128), 1, 2); }
+    st.t.wrapS = st.t.wrapT = T.RepeatWrapping; st.t.repeat.set(46, 46);
+    var ground = new T.Mesh(new T.PlaneGeometry(1500, 1500), new T.MeshStandardMaterial({color:0x05060a, roughness:0.9, emissive:0xffffff, emissiveMap:st.t, emissiveIntensity:1.1}));
+    ground.rotation.x = -Math.PI / 2; ground.position.y = BASE; scene.add(ground);
+    var own = new T.Mesh(unit, towerMat(15, 32, 0.3)); own.scale.set(36.8, 77.6, 24.8); own.position.set(0, BASE, 0); scene.add(own);
+
+    /* the room: a full floor, 36 by 24 */
+    var walnut = S(0x3a2416, 0.38), metalM = S(0x1b1c20, 0.4, 0.7), brass = S(0xb8923f, 0.28, 0.95), chrome = S(0xa9acb0, 0.22, 0.95), leather = S(0x17110d, 0.42);
+    var pl = tex(256, 256);
+    for (i = 0; i < 8; i++) for (var pj = 0; pj < 4; pj++){
+      var tone = 50 + Math.floor(rnd() * 9);
+      pl.g.fillStyle = "rgb(" + (tone + 22) + "," + (tone - 2) + "," + (tone - 16) + ")";
+      pl.g.fillRect(pj * 64 + (i % 2) * 32 - 32, i * 32, 64, 32); pl.g.fillRect(pj * 64 + (i % 2) * 32 + 224, i * 32, 64, 32);
+      pl.g.fillStyle = "rgba(0,0,0,.18)"; pl.g.fillRect(pj * 64 + (i % 2) * 32, i * 32, 1, 32); pl.g.fillRect(0, i * 32, 256, 1);
+    }
+    pl.t.wrapS = pl.t.wrapT = T.RepeatWrapping; pl.t.repeat.set(20, 14);
+    var floorM = new T.MeshStandardMaterial({map:pl.t, roughness:0.2, metalness:0.05}); floorM.envMapIntensity = 1.3;
+    var slab = box(scene, 36.8, 0.5, 24.8, floorM, 0, -0.25, 0); slab.castShadow = false;
+    var glass = new T.MeshStandardMaterial({color:0xb9d6ff, transparent:true, opacity:0.1, roughness:0.04, metalness:0.7, depthWrite:false, side:T.DoubleSide});
+    var pglass = new T.MeshStandardMaterial({color:0xd8ecff, transparent:true, opacity:0.16, roughness:0.05, metalness:0.4, depthWrite:false, side:T.DoubleSide});
+    function pane(mat, w, h, x, y, z, ry){ var m = new T.Mesh(new T.PlaneGeometry(w, h), mat); m.position.set(x, y, z); m.rotation.y = ry || 0; scene.add(m); return m; }
+    // outer glass: back and left
+    box(scene, 36.6, 0.3, 0.3, metalM, 0, 0.15, -12.25); box(scene, 36.6, 0.35, 0.3, metalM, 0, 6.43, -12.25);
+    for (i = 0; i <= 18; i++) box(scene, 0.09, 6.6, 0.14, metalM, -18 + i * 2, 3.3, -12.25);
+    pane(glass, 36, 6.0, 0, 3.3, -12.25);
+    box(scene, 0.3, 0.3, 24.6, metalM, -18.25, 0.15, 0); box(scene, 0.3, 0.35, 24.6, metalM, -18.25, 6.43, 0);
+    for (i = 0; i <= 12; i++) box(scene, 0.14, 6.6, 0.09, metalM, -18.25, 3.3, -12 + i * 2);
+    pane(glass, 24, 6.0, -18.25, 3.3, 0, Math.PI / 2);
+    box(scene, 0.5, 6.6, 0.5, walnut, -18.25, 3.3, -12.25);
+    // right wall: walnut, with the big board
+    box(scene, 0.3, 6.6, 24.6, walnut, 18.25, 3.3, 0);
+    for (i = 0; i < 6; i++) box(scene, 0.06, 6.6, 0.08, S(0x2a190e, 0.4), 18.08, 3.3, -10 + i * 4);
+
+    // glass partitions make six private offices
+    function gwall(x1, z1, x2, z2){
+      var horiz = z1 === z2, len = horiz ? Math.abs(x2 - x1) : Math.abs(z2 - z1), cx = (x1 + x2) / 2, cz = (z1 + z2) / 2;
+      pane(pglass, len, 3.0, cx, 1.6, cz, horiz ? 0 : Math.PI / 2);
+      box(scene, horiz ? len : 0.08, 0.1, horiz ? 0.08 : len, metalM, cx, 3.15, cz);
+      box(scene, horiz ? len : 0.08, 0.1, horiz ? 0.08 : len, metalM, cx, 0.05, cz);
+      box(scene, 0.08, 3.2, 0.08, metalM, x1, 1.6, z1); box(scene, 0.08, 3.2, 0.08, metalM, x2, 1.6, z2);
+    }
+    [-12, 12].forEach(function(zc){
+      var zin = zc < 0 ? -5 : 5, zout = zc < 0 ? -12.1 : 12.2;
+      gwall(-6, zout, -6, zin); gwall(6, zout, 6, zin);
+      [-18, -6, 6].forEach(function(x0){
+        gwall(x0 + 0.1, zin, x0 + 8.4, zin); gwall(x0 + 10.4, zin, x0 + 11.9, zin);
+        var door = pane(pglass, 1.9, 2.9, x0 + 8.4 + Math.cos(1.0) * 0.95, 1.5, zin + (zc < 0 ? -1 : 1) * Math.sin(1.0) * 0.95, zc < 0 ? 1.0 : -1.0);
+        box(scene, 0.04, 0.3, 0.04, brass, door.position.x + Math.cos(1.0) * 0.75, 1.1, door.position.z + (zc < 0 ? -1 : 1) * Math.sin(1.0) * 0.75);
+        var cp = box(scene, 11.7, 0.03, 6.8, S(zc < 0 ? 0x24302c : 0x2b2a30, 1), x0 + 6, 0.012, (zin + zout) / 2); cp.castShadow = false;
+      });
+    });
+    var runner = box(scene, 30, 0.02, 2.4, S(0x4a1f22, 1), -2, 0.01, 4.0 - 4.0); runner.castShadow = false;
+
+    /* big board on the wall and on the long table, clock and ticker */
+    var bb = tex(512, 256);
+    box(scene, 0.1, 3.3, 6.3, brass, 18.06, 3.75, 0);
+    var wb = screen(scene, 6.0, 3.0, bb, 17.99, 3.75, 0); wb.rotation.y = -Math.PI / 2;
+    function paintBoard(){
+      var g = bb.g, rows = order();
+      g.fillStyle = "#06100c"; g.fillRect(0, 0, 512, 256);
+      g.textBaseline = "middle"; g.font = "bold 22px Georgia, serif"; g.fillStyle = "#c8a55a"; g.textAlign = "left";
+      g.fillText("THE BIG BOARD", 18, 24);
+      g.font = "14px 'Courier New', monospace"; g.fillStyle = "#93a59c"; g.textAlign = "right";
+      g.fillText(mode === "return" ? "RETURN PER YEAR" : "WORST DROP", 494, 26);
+      var max = 0; rows.forEach(function(b){ max = Math.max(max, Math.abs(mode === "return" ? b.ret : b.drop)); });
+      rows.forEach(function(b, n){
+        var val = mode === "return" ? b.ret : b.drop, y = 62 + n * 33;
+        g.textAlign = "left"; g.font = "bold 18px 'Courier New', monospace";
+        g.fillStyle = b.id === selected ? "#ffffff" : "#efe8d8"; g.fillText((n + 1) + " " + b.tag, 18, y);
+        g.fillStyle = mode === "drop" ? "#ef6a5e" : b.ret >= SPY.ret ? "#4fd08c" : "#e3b04b";
+        g.fillRect(150, y - 9, Math.max(4, Math.abs(val) / max * 250), 18);
+        g.textAlign = "right"; g.fillText(fmt(val), 494, y);
+      });
+      bb.t.needsUpdate = true;
+    }
+    var clockG = new T.Group(); clockG.position.set(18.06, 6.02, 0); clockG.rotation.y = -Math.PI / 2; scene.add(clockG);
+    var rim = cyl(clockG, 0.5, 0.5, 0.08, brass, 0, 0, 0, 32); rim.rotation.x = Math.PI / 2;
+    var face = cyl(clockG, 0.43, 0.43, 0.09, S(0xf4efe2, 0.6), 0, 0, 0.01, 32); face.rotation.x = Math.PI / 2;
+    function hand(len, w, c){ var g = new T.Group(); g.position.z = 0.07; box(g, w, len, 0.02, c, 0, len / 2, 0); clockG.add(g); return g; }
+    var hH = hand(0.24, 0.05, 0x1a1a1a), hM = hand(0.36, 0.035, 0x1a1a1a), hS = hand(0.4, 0.015, 0xb3262b);
+    var led = tex(2048, 48);
+    function paintLed(){
+      led.g.fillStyle = "#050607"; led.g.fillRect(0, 0, 2048, 48);
+      led.g.font = "bold 30px 'Courier New', monospace"; led.g.textBaseline = "middle";
+      var lx = 10;
+      for (var rp = 0; rp < 3; rp++) BOTS.forEach(function(b){
+        var s = b.tag + " " + fmt(b.ret) + "   ";
+        led.g.fillStyle = b.ret >= SPY.ret ? "#4fd08c" : "#e3b04b"; led.g.fillText(s, lx, 26); lx += led.g.measureText(s).width;
+      });
+      led.t.needsUpdate = true;
+    }
+    paintLed();
+    led.t.wrapS = T.RepeatWrapping; led.t.repeat.set(2, 1);
+    box(scene, 36.6, 0.56, 0.16, metalM, 0, 6.95, -12.25); screen(scene, 36.4, 0.42, led, 0, 6.95, -12.16);
+
+    /* shared furniture */
+    function chair(parent, x, z, ry){
+      var g = new T.Group(); g.position.set(x, 0, z); g.rotation.y = ry || 0; parent.add(g);
+      box(g, 0.62, 0.12, 0.6, leather, 0, 0.52, 0); var bk = box(g, 0.62, 0.7, 0.1, leather, 0, 0.9, -0.3); bk.rotation.x = -0.1;
+      cyl(g, 0.04, 0.04, 0.46, chrome, 0, 0.24, 0, 8); cyl(g, 0.3, 0.32, 0.04, chrome, 0, 0.02, 0, 14);
+      return g;
+    }
+    function sofa(parent, x, z, ry, len){
+      var g = new T.Group(); g.position.set(x, 0, z); g.rotation.y = ry || 0; parent.add(g);
+      var lm = S(0x3d2417, 0.5);
+      box(g, len, 0.42, 0.95, lm, 0, 0.26, 0); box(g, len, 0.6, 0.22, lm, 0, 0.72, -0.37);
+      box(g, 0.22, 0.62, 0.95, lm, -len / 2 + 0.11, 0.5, 0); box(g, 0.22, 0.62, 0.95, lm, len / 2 - 0.11, 0.5, 0);
+      for (var k = 0; k < Math.round(len / 1.1); k++) box(g, len / Math.round(len / 1.1) - 0.3, 0.12, 0.62, S(0x4a2d1d, 0.55), -len / 2 + 0.3 + (k + 0.5) * ((len - 0.6) / Math.round(len / 1.1)), 0.52, 0.08);
+      return g;
+    }
+    var spines = tex(256, 64), bookCols = ["#6b1f24","#1f3d33","#22305c","#8f7334","#2a2a2a","#5a3a1a","#efe8d8","#3a1f4a"];
+    spines.g.fillStyle = "#1a120b"; spines.g.fillRect(0, 0, 256, 64);
+    for (var bx = 2; bx < 252;){ var bw = 6 + Math.floor(rnd() * 9), bh = 44 + Math.floor(rnd() * 16); spines.g.fillStyle = bookCols[Math.floor(rnd() * 8)]; spines.g.fillRect(bx, 62 - bh, bw, bh); spines.g.fillStyle = "rgba(200,165,90,.8)"; spines.g.fillRect(bx + 1, 62 - bh + 8, bw - 2, 2); bx += bw + 1; }
+    function shelf(parent, x, z, ry){
+      var g = new T.Group(); g.position.set(x, 0, z); g.rotation.y = ry || 0; parent.add(g);
+      box(g, 2.8, 2.5, 0.42, walnut, 0, 1.25, 0);
+      for (var k = 0; k < 4; k++) screen(g, 2.6, 0.5, spines, 0, 0.36 + k * 0.6, 0.215);
+      return g;
+    }
+    function palmAt(x, z){
+      var palm = new T.Group(); palm.position.set(x, 0, z); scene.add(palm);
+      cyl(palm, 0.42, 0.32, 0.7, S(0xe9e4d6, 0.3), 0, 0.35, 0, 20); cyl(palm, 0.06, 0.08, 2.2, S(0x5a3a1a, 0.8), 0, 1.7, 0, 8);
+      for (var k = 0; k < 9; k++){
+        var lf = ball(palm, 0.5, S(k % 2 ? 0x2c6b3a : 0x3a8247, 0.6), Math.cos(k * 0.7) * 0.75, 2.8 + (k % 3) * 0.12, Math.sin(k * 0.7) * 0.75, 1.5, 0.12, 0.45);
+        lf.rotation.y = -k * 0.7; lf.rotation.z = -0.35;
+      }
+    }
+
+    /* the middle of the floor: board table, junior desks, lounge */
+    var bt = new T.Group(); bt.position.set(-10.5, 0, 0); scene.add(bt);
+    box(bt, 7.0, 0.12, 3.7, U(0x24150c, 0.2), 0, 0.92, 0); box(bt, 0.5, 0.86, 2.4, walnut, -2.4, 0.43, 0); box(bt, 0.5, 0.86, 2.4, walnut, 2.4, 0.43, 0);
+    var ts = screen(bt, 6.2, 3.1, bb, 0, 0.99, 0); ts.rotation.x = -Math.PI / 2;
+    [-2.2, 0, 2.2].forEach(function(cx){ chair(bt, cx, -2.5, 0); chair(bt, cx, 2.5, Math.PI); });
+    chair(bt, -4.2, 0, Math.PI / 2); chair(bt, 4.2, 0, -Math.PI / 2);
+    sofa(scene, 17.3, -2.4, -Math.PI / 2, 3.4); chair(scene, 13.9, -1.7, Math.PI / 2); chair(scene, 13.9, -2.9, Math.PI / 2);
+    box(scene, 0.9, 0.08, 1.6, U(0x24150c, 0.2), 15.3, 0.42, -2.3); box(scene, 0.6, 0.36, 1.2, brass, 15.3, 0.2, -2.3);
+    // coffee station
+    box(scene, 1.0, 1.0, 2.6, walnut, 12.6, 0.5, 0.3); box(scene, 1.1, 0.06, 2.7, U(0x1a1a1a, 0.15), 12.6, 1.03, 0.3);
+    box(scene, 0.6, 0.6, 0.9, chrome, 12.7, 1.36, 0.0); box(scene, 0.62, 0.12, 0.92, S(0x15161a, 0.4), 12.7, 1.72, 0.0);
+    cyl(scene, 0.04, 0.04, 0.12, chrome, 12.38, 1.3, -0.2, 8); cyl(scene, 0.04, 0.04, 0.12, chrome, 12.38, 1.3, 0.2, 8);
+    for (i = 0; i < 4; i++) cyl(scene, 0.06, 0.045, 0.09, S(0xf4f1ea, 0.3), 12.5 + (i % 2) * 0.16, 1.1, 1.0 + (i >> 1) * 0.16, 10);
+    var cart = new T.Group(); cart.position.set(17.2, 0, 3.4); cart.rotation.y = -Math.PI / 2; scene.add(cart);
+    box(cart, 1.5, 0.06, 0.7, walnut, 0, 0.95, 0); box(cart, 1.5, 0.06, 0.7, walnut, 0, 0.4, 0);
+    [[-0.7,-0.3],[0.7,-0.3],[-0.7,0.3],[0.7,0.3]].forEach(function(p){ cyl(cart, 0.03, 0.03, 1.0, brass, p[0], 0.5, p[1], 8); });
+    [[-0.45,0x2f5d3a],[-0.2,0x7a4a1c],[0.05,0xd9c8a0],[0.3,0x2a2a2a]].forEach(function(b){
+      cyl(cart, 0.07, 0.07, 0.32, U(b[1], 0.12, 0.2), b[0], 1.14, 0, 12); cyl(cart, 0.03, 0.03, 0.12, U(b[1], 0.12, 0.2), b[0], 1.36, 0, 10);
+    });
+    cyl(cart, 0.16, 0.13, 0.2, chrome, 0.5, 0.53, 0, 16);
+    palmAt(-17.0, -4.2); palmAt(-17.0, 4.2); palmAt(17.0, 4.6);
+    var scope = new T.Group(); scope.position.set(-16.6, 0, 0); scene.add(scope);
+    [0, 2.1, 4.2].forEach(function(a){ var lg = cyl(scope, 0.025, 0.025, 1.5, brass, Math.cos(a) * 0.25, 0.72, Math.sin(a) * 0.25, 6); lg.rotation.z = Math.cos(a) * 0.33; lg.rotation.x = -Math.sin(a) * 0.33; });
+    var tube = cyl(scope, 0.07, 0.09, 1.1, brass, 0, 1.55, 0, 14); tube.rotation.z = 1.35;
+    sofa(scene, -15.2, 2.2, Math.PI, 2.4);
+
+    // junior brokers at the open desks
+    var juniors = [];
+    var JR = [[0x2a2d33,0xd9a070,0x1a1512,"slick",0x7a1f24,"phone"],[0x1d2433,0xf0c4a0,0x6b4a2a,"side",0x2e6b8b,"type"],[0x3a3530,0x8a5a3c,0x0e0c0a,"slick",0xc8a55a,"type"],
+              [0x23272e,0xe2b08a,0xb5562a,"pomp",0x22305c,"type"],[0x40434a,0xecc4a4,0x2a2019,"side",0x7a1f24,"phone"],[0x1a1a1f,0xc68a5c,0x15110e,"slick",0x2e8b57,"calm"]];
+    JR.forEach(function(j, n){
+      var g = new T.Group(); g.position.set(-1.5 + (n % 3) * 4.2, 0, n < 3 ? -2.3 : 2.3); scene.add(g);
+      box(g, 2.2, 0.08, 1.0, U(0x4a2b17, 0.25), 0, 0.96, 0.3); box(g, 0.08, 0.92, 0.9, walnut, -1.0, 0.46, 0.3); box(g, 0.08, 0.92, 0.9, walnut, 1.0, 0.46, 0.3); box(g, 2.0, 0.5, 0.05, walnut, 0, 0.66, 0.72);
+      box(g, 0.66, 0.54, 0.56, S(0x2b2d31, 0.5), -0.6, 1.3, 0.2);
+      var sc = tex(8, 8); sc.g.fillStyle = "#06180f"; sc.g.fillRect(0, 0, 8, 8); sc.g.fillStyle = "#4fd08c"; for (var k = 0; k < 8; k++) sc.g.fillRect(k, 2 + Math.floor(rnd() * 4), 1, 1);
+      sc.t.magFilter = T.NearestFilter; screen(g, 0.52, 0.4, sc, -0.6, 1.32, 0.485);
+      box(g, 0.6, 0.03, 0.22, S(0xb9b4a6, 0.6), 0.25, 1.02, 0.35); box(g, 0.3, 0.06, 0.24, S(0x141414, 0.4), 0.8, 1.03, 0.5);
+      var seat = new T.Group(); seat.position.set(0.25, 0, -0.55); g.add(seat);
+      box(seat, 0.7, 0.12, 0.66, leather, 0, 0.58, 0); var bk = box(seat, 0.68, 0.8, 0.1, leather, 0, 1.02, -0.34); bk.rotation.x = -0.08;
+      cyl(seat, 0.04, 0.04, 0.5, chrome, 0, 0.28, 0, 8); cyl(seat, 0.32, 0.34, 0.04, chrome, 0, 0.02, 0, 14);
+      var J = {g:g, seat:seat, seed:n * 2.3 + 5, state:j[5], bits:["stretch","pump","watch","sip"], nextBit:6 + n * 2.1};
+      person(J, seat, {suit:j[0], skin:j[1], hair:j[2], style:j[3], tie:j[4]}, j[5], true);
+      juniors.push(J);
+    });
+
+    /* one desk per bot */
+    var SPOTS = [[-12,-8.7],[0,-8.7],[12,-8.7],[-12,8.2],[0,8.2],[12,8.2]];
+    var zones = {};
+    BOTS.forEach(function(b, n){ zones[b.id] = zone(b, SPOTS[n][0], SPOTS[n][1], n); });
+
+    function zone(b, x, z, n){
+      var g = new T.Group(); g.position.set(x, 0, z); scene.add(g);
+      var Z = {bot:b, g:g, seed:n * 1.7, pos:new T.Vector3(x + 0.3, 2.85, z - 0.8)};
+      Z.rugMat = U(0x1c3a30, 0.95);
+      var rug = box(g, 4.5, 0.03, 3.9, Z.rugMat, 0, 0.015, -0.1); rug.castShadow = false;
+      var edge = box(g, 4.7, 0.02, 4.1, S(0x8f7334, 0.6, 0.3), 0, 0.008, -0.1); edge.castShadow = false;
+      // executive desk
+      box(g, 3.1, 0.1, 1.45, U(0x4a2b17, 0.22), 0, 1.0, 0.3);
+      box(g, 0.85, 0.95, 1.25, walnut, -1.05, 0.475, 0.3); box(g, 0.85, 0.95, 1.25, walnut, 1.05, 0.475, 0.3);
+      box(g, 1.3, 0.7, 0.06, walnut, 0, 0.6, 0.9); box(g, 3.1, 0.03, 0.03, brass, 0, 0.93, 1.03);
+      box(g, 2.0, 0.012, 0.85, S(0x12241d, 0.7), 0.25, 1.056, 0.3);
+      box(g, 0.75, 0.13, 0.07, brass, 0.3, 1.115, 0.93);
+      // terminal
+      box(g, 0.92, 0.74, 0.78, S(0x2b2d31, 0.5), -0.95, 1.5, 0.12); box(g, 0.5, 0.08, 0.5, S(0x232428, 0.5), -0.95, 1.09, 0.12);
+      Z.screen = tex(96, 72); screen(g, 0.74, 0.56, Z.screen, -0.95, 1.52, 0.515);
+      box(g, 0.8, 0.04, 0.28, S(0xb9b4a6, 0.6), 0.25, 1.08, 0.2);
+      box(g, 0.36, 0.07, 0.3, S(0x141414, 0.4), 1.2, 1.085, 0.62); box(g, 0.09, 0.06, 0.34, S(0x141414, 0.4), 1.09, 1.15, 0.62);
+      Z.curve = curve(b);
+      // chair and occupant swivel together
+      var seat = new T.Group(); seat.position.set(0.3, 0, b.state === "feet" ? -1.2 : -0.8); g.add(seat); Z.seat = seat;
+      box(seat, 0.84, 0.14, 0.8, leather, 0, 0.58, 0);
+      var back = box(seat, 0.82, 1.3, 0.14, leather, 0, 1.25, -0.43); back.rotation.x = -0.08;
+      box(seat, 0.5, 0.22, 0.16, leather, 0, 1.98, -0.5);
+      box(seat, 0.08, 0.05, 0.6, metalM, -0.46, 0.9, 0); box(seat, 0.08, 0.05, 0.6, metalM, 0.46, 0.9, 0);
+      cyl(seat, 0.05, 0.05, 0.5, chrome, 0, 0.28, 0, 10); cyl(seat, 0.4, 0.44, 0.05, chrome, 0, 0.03, 0, 20);
+      Z.state = b.state;
+      Z.bits = {core:["sip","stretch","toss","watch"], trend:["slam","pump","watch"], dip:["peek","count","sip"], rotation:["coin","stretch","pump"], balanced:["sip","glasses","watch","stretch"]}[b.id];
+      Z.nextBit = 3 + n * 1.3;
+      Z.cup = new T.Group(); Z.cup.position.set(1.25, 1.06, 0.2); g.add(Z.cup); Z.cup.visible = false;
+      cyl(Z.cup, 0.11, 0.11, 0.012, S(0xf4f1ea, 0.3), 0, 0, 0, 14); cyl(Z.cup, 0.06, 0.045, 0.1, S(0xf4f1ea, 0.3), 0, 0.055, 0, 12); cyl(Z.cup, 0.05, 0.05, 0.005, S(0x3a2416, 0.5), 0, 0.105, 0, 12);
+      if (b.id === "rotation"){ Z.coin = cyl(g, 0.07, 0.07, 0.015, brass, 0, 0, 0, 14); Z.coin.visible = false; }
+      if (b.id === "core"){
+        cyl(g, 0.22, 0.17, 0.42, metalM, 3.4, 0.21, 1.2, 14);
+        Z.paper = ball(g, 0.07, S(0xffffff, 0.9), 0, 0, 0); Z.paper.visible = false;
+      }
+      if (b.plant) ficus(Z, seat); else person(Z, seat, b.look, b.state, false);
+      clutter(Z, g, b);
+      // the rest of the office
+      chair(g, -0.5, 2.5, Math.PI + 0.25); chair(g, 1.1, 2.5, Math.PI - 0.25);
+      sofa(g, -5.25, 0.4, Math.PI / 2, 2.8); shelf(g, 5.68, -0.2, -Math.PI / 2);
+      cyl(g, 0.02, 0.02, 0.26, brass, -0.2, 1.18, 0.75, 8); cyl(g, 0.09, 0.09, 0.02, brass, -0.2, 1.06, 0.75, 12);
+      var shadeM = new T.MeshStandardMaterial({color:0x1f6b45, emissive:0x2f9a62, emissiveIntensity:0.9, roughness:0.3});
+      var lampShade = cyl(g, 0.07, 0.07, 0.34, shadeM, -0.2, 1.33, 0.75, 12); lampShade.rotation.z = Math.PI / 2;
+      // rank perks, switched on and off by the board
+      Z.trophy = new T.Group(); Z.trophy.position.set(1.15, 1.05, 0.05); g.add(Z.trophy);
+      box(Z.trophy, 0.26, 0.06, 0.26, S(0x1a1a1a, 0.3), -0.28, 0.03, 0.25); cyl(Z.trophy, 0.03, 0.05, 0.16, brass, -0.28, 0.14, 0.25, 10);
+      cyl(Z.trophy, 0.14, 0.05, 0.24, brass, -0.28, 0.34, 0.25, 16);
+      cyl(Z.trophy, 0.2, 0.16, 0.3, chrome, 0.05, 0.15, -0.1, 18);
+      cyl(Z.trophy, 0.055, 0.055, 0.34, U(0x1f4a2c, 0.15, 0.2), 0.07, 0.36, -0.1, 12); cyl(Z.trophy, 0.025, 0.03, 0.12, brass, 0.07, 0.59, -0.1, 10);
+      Z.copier = new T.Group(); Z.copier.position.set(2.05, 0, -1.4); g.add(Z.copier);
+      box(Z.copier, 1.1, 1.2, 0.9, S(0xcfc8b6, 0.6), 0, 0.6, 0); box(Z.copier, 1.1, 0.12, 0.9, S(0xb5ad98, 0.6), 0, 1.26, 0);
+      Z.scan = mk(Z.copier, new T.BoxGeometry(0.08, 0.03, 0.8), new T.MeshBasicMaterial({color:0x9cff9c}), 0, 1.19, 0);
+      Z.sheet = box(Z.copier, 0.4, 0.02, 0.5, S(0xffffff, 0.8), -0.7, 0.8, 0);
+      // name tag
+      Z.tag = document.createElement("button"); Z.tag.type = "button"; Z.tag.className = "tag"; Z.tag.textContent = b.tag;
+      Z.tag.setAttribute("aria-label", "Open the file for " + b.name);
+      Z.tag.addEventListener("click", function(){ select(b.id); });
+      stage.appendChild(Z.tag);
+      return Z;
+    }
+
+    function curve(b){
+      var seed = b.tag.length * 97 + 13 + Math.round(b.ret * 10), out = [], v = 36;
+      for (var i = 0; i < 40; i++){
+        seed = (seed * 1103515245 + 12345) & 0x7fffffff;
+        v += (seed % 1000) / 1000 * 10 - 5 - b.ret / 12;
+        v = Math.max(8, Math.min(62, v)); out.push(v);
+      }
+      return out;
+    }
+    function paintScreen(Z, step){
+      var g = Z.screen.g, b = Z.bot, n;
+      g.fillStyle = "#04100a"; g.fillRect(0, 0, 96, 72);
+      g.strokeStyle = "rgba(79,208,140,.18)"; g.lineWidth = 1; g.beginPath();
+      for (n = 12; n < 96; n += 12){ g.moveTo(n, 0); g.lineTo(n, 72); } for (n = 12; n < 72; n += 12){ g.moveTo(0, n); g.lineTo(96, n); } g.stroke();
+      var shown = reduce ? 40 : Math.min(40, 6 + (step + b.tag.length * 5) % 58);
+      g.strokeStyle = b.ret >= SPY.ret ? "#4fd08c" : b.ret > 8 ? "#e3b04b" : "#ef6a5e"; g.lineWidth = 2; g.beginPath();
+      for (n = 0; n < shown; n++){ if (n) g.lineTo(4 + n * 2.25, Z.curve[n]); else g.moveTo(4, Z.curve[0]); }
+      g.stroke();
+      Z.screen.t.needsUpdate = true;
+    }
+
+    function pose(arm, shx, shz, elx, elz){ arm.sh.rotation.x = shx; arm.sh.rotation.z = shz * arm.side; arm.el.rotation.x = elx; arm.el.rotation.z = elz * arm.side; }
+
+    function person(Z, seat, c, state, lite){
+      var suit = S(c.suit, 0.62), lapel = S(shade(c.suit, 0.72), 0.5), skin = S(c.skin, 0.6), shirt = S(0xf4f1ea, 0.6),
+          hairM = S(c.hair, 0.45), tieM = S(c.tie, 0.4), dark = S(0x15161a, 0.4);
+      var walk = state === "walk";
+      var body = new T.Group(); body.position.set(0, walk ? 0.92 : 0.66, 0); seat.add(body); Z.body = body;
+      if (!walk) [-0.16, 0.16].forEach(function(px){ var th = cyl(body, 0.12, 0.11, 0.5, suit, px, 0.05, 0.26, 12); th.rotation.x = Math.PI / 2; });
+      var torso = cyl(body, 0.35, 0.29, 0.78, suit, 0, 0.42, 0, 20); torso.scale.z = 0.62;
+      ball(body, 0.37, suit, 0, 0.79, 0, 1, 0.34, 0.62);
+      box(body, 0.17, 0.44, 0.02, shirt, 0, 0.56, 0.205);
+      var l1 = box(body, 0.11, 0.5, 0.025, lapel, -0.125, 0.55, 0.213); l1.rotation.z = -0.24;
+      var l2 = box(body, 0.11, 0.5, 0.025, lapel, 0.125, 0.55, 0.213); l2.rotation.z = 0.24;
+      box(body, 0.065, 0.4, 0.03, tieM, 0, 0.52, 0.224); box(body, 0.09, 0.07, 0.035, tieM, 0, 0.75, 0.224);
+      if (!lite) box(body, 0.09, 0.035, 0.02, shirt, 0.21, 0.62, 0.19);
+      if (c.stripe) [-0.28,-0.22,0.22,0.28].forEach(function(px){ box(body, 0.008, 0.62, 0.01, S(0x9a9ea8, 0.6), px, 0.4, 0.62 * Math.sqrt(0.105 - px * px) + 0.004); });
+      cyl(body, 0.105, 0.11, 0.06, shirt, 0, 0.855, 0, 12); cyl(body, 0.085, 0.095, 0.14, skin, 0, 0.92, 0, 12);
+      var head = new T.Group(); head.position.set(0, 1.22, 0); body.add(head); Z.head = head;
+      ball(head, 0.26, skin, 0, 0, 0, 0.95, 1.15, 1.02);
+      if (!lite){ ball(head, 0.05, skin, -0.245, 0, 0); ball(head, 0.05, skin, 0.245, 0, 0);
+        ball(head, 0.036, S(shade(c.skin, 0.93), 0.6), 0, -0.03, 0.262, 0.8, 1.25, 1); }
+      Z.eyes = [ball(head, 0.027, dark, -0.09, 0.045, 0.236), ball(head, 0.027, dark, 0.09, 0.045, 0.236)];
+      if (!lite){ box(head, 0.09, 0.018, 0.02, hairM, -0.09, 0.105, 0.243); box(head, 0.09, 0.018, 0.02, hairM, 0.09, 0.105, 0.243); }
+      Z.mouth = box(head, 0.1, 0.02, 0.02, S(0x8a4a3c, 0.6), 0, -0.14, 0.238);
+      var cap = mk(head, new T.SphereGeometry(0.276, 20, 12, 0, Math.PI * 2, 0, Math.PI * 0.5), hairM, 0, 0.03, -0.012);
+      cap.scale.set(0.975, 1.18, 1.04); cap.rotation.x = c.style === "bald" ? -1.32 : -0.44;
+      if (c.style === "bald") cap.scale.set(0.99, 1.0, 1.02);
+      if (c.style === "pomp") ball(head, 0.14, hairM, 0, 0.27, 0.11, 1.5, 0.75, 1.15);
+      if (c.style === "side") cap.rotation.z = 0.14;
+      if (c.glasses){
+        [-0.09, 0.09].forEach(function(px){ mk(head, new T.TorusGeometry(0.058, 0.008, 6, 20), dark, px, 0.045, 0.25); });
+        box(head, 0.07, 0.012, 0.012, dark, 0, 0.05, 0.255);
+      }
+      Z.arms = [-1, 1].map(function(side){
+        var sh = new T.Group(); sh.position.set(side * 0.4, 0.74, 0); body.add(sh);
+        ball(sh, 0.11, suit, 0, 0, 0); cyl(sh, 0.095, 0.085, 0.36, suit, 0, -0.18, 0, 12);
+        var el = new T.Group(); el.position.set(0, -0.36, 0); sh.add(el);
+        ball(el, 0.088, suit, 0, 0, 0); cyl(el, 0.082, 0.07, 0.32, suit, 0, -0.16, 0, 12);
+        cyl(el, 0.074, 0.074, 0.04, shirt, 0, -0.33, 0, 12); ball(el, 0.075, skin, 0, -0.4, 0, 0.9, 1.1, 0.7);
+        return {sh:sh, el:el, side:side};
+      });
+      Z.sipCup = cyl(Z.arms[1].el, 0.05, 0.04, 0.09, S(0xf4f1ea, 0.3), 0, -0.46, 0.07, 10); Z.sipCup.visible = false;
+      if (walk){
+        Z.legs = [-0.14, 0.14].map(function(px){
+          var lg = new T.Group(); lg.position.set(px, 0.04, 0); body.add(lg);
+          cyl(lg, 0.11, 0.085, 0.84, S(0x1a1b20, 0.6), 0, -0.42, 0, 12); ball(lg, 0.09, S(0x120c08, 0.2), 0, -0.86, 0.06, 1, 0.6, 1.7);
+          return lg;
+        });
+        box(body, 0.52, 0.62, 0.03, S(0x1f3d33, 0.8), 0, 0.3, 0.215); box(body, 0.5, 0.4, 0.03, S(0x1f3d33, 0.8), 0, -0.18, 0.15);
+        ball(head, 0.1, hairM, 0, 0.2, -0.24);
+        var tray = new T.Group(); tray.position.set(0.3, 0.5, 0.52); body.add(tray);
+        cyl(tray, 0.3, 0.3, 0.03, chrome, 0, 0, 0, 20);
+        [[-0.1, 0.05], [0.1, -0.06], [0.02, 0.14]].forEach(function(p){ cyl(tray, 0.055, 0.045, 0.1, S(0xf4f1ea, 0.3), p[0], 0.065, p[1], 10); });
+        pose(Z.arms[1], -0.45, 0.1, -1.15, 0);
+        return;
+      }
+      var s = state;
+      if (s === "phone"){
+        var ph = new T.Group(); ph.position.set(0.3, 0.02, 0.03); head.add(ph); Z.phone = ph;
+        box(ph, 0.09, 0.46, 0.17, S(0x101010, 0.4), 0, 0, 0); cyl(ph, 0.012, 0.012, 0.3, S(0x101010, 0.4), 0.01, 0.38, -0.05, 6);
+        pose(Z.arms[1], 0, 2.0, 0, 2.2); pose(Z.arms[0], -0.5, 0.1, -1.0, 0);
+      }
+      if (s === "feet"){
+        body.rotation.x = -0.3;
+        Z.shoes = [-0.16, 0.16].map(function(px){
+          var leg = new T.Group(); leg.position.set(0.3 + px, 0.8, -1.0); Z.g.add(leg); leg.rotation.x = -0.38;
+          var lc = cyl(leg, 0.11, 0.095, 1.15, suit, 0, 0, 0.57, 12); lc.rotation.x = Math.PI / 2;
+          return ball(leg, 0.1, S(0x120c08, 0.18), 0, 0.1, 1.2, 1, 1.9, 0.9);
+        });
+        pose(Z.arms[0], 0.25, 2.0, 0, 2.3); pose(Z.arms[1], 0.25, 2.0, 0, 2.3);
+      }
+      if (s === "despair"){
+        pose(Z.arms[0], -0.4, 2.0, 0, 2.25); pose(Z.arms[1], -0.4, 2.0, 0, 2.25);
+        Z.drops = [-0.36, 0.36].map(function(px){ return ball(body, 0.035, U(0x8fd6ff, 0.1), px, 1.3, 0.22, 1, 1.5, 1); });
+      }
+      if (s === "swivel"){ pose(Z.arms[0], -0.3, 0.25, -1.1, 0); pose(Z.arms[1], -0.3, 0.25, -1.1, 0); }
+      if (s === "type" || s === "calm"){ pose(Z.arms[0], -0.5, 0.05, -1.1, 0); pose(Z.arms[1], -0.5, 0.05, -1.1, 0); }
+    }
+
+    function ficus(Z, seat){
+      cyl(seat, 0.32, 0.23, 0.5, S(0xe9e4d6, 0.25), 0, 0.9, 0, 24); cyl(seat, 0.3, 0.3, 0.03, S(0x2a1d12, 0.9), 0, 1.15, 0, 24);
+      box(seat, 0.07, 0.3, 0.02, S(0xb3262b, 0.4), 0, 0.88, 0.285); box(seat, 0.1, 0.07, 0.025, S(0xb3262b, 0.4), 0, 1.06, 0.3);
+      var top = new T.Group(); top.position.set(0, 1.15, 0); seat.add(top); Z.leaves = top;
+      cyl(top, 0.04, 0.06, 0.9, S(0x5a3a1a, 0.8), 0, 0.45, 0, 8);
+      [[0,1.05,0,.42],[-.32,.8,.1,.3],[.34,.86,-.05,.31],[0,.66,.3,.27],[.06,1.42,0,.28],[-.22,1.25,-.2,.26],[.26,1.2,.22,.25],[-.1,.9,-.28,.26]].forEach(function(l, k){
+        ball(top, l[3], S(k % 2 ? 0x2c6b3a : 0x3a8247, 0.7), l[0], l[1], l[2]);
+      });
+      Z.leaf = ball(Z.g, 0.07, S(0x3a8247, 0.7), 0.9, 2.2, -0.6, 1.3, 0.2, 0.8);
+    }
+
+    function clutter(Z, g, b){
+      var n;
+      if (b.id === "core" || b.id === "balanced"){
+        cyl(g, 0.14, 0.14, 0.015, S(0xf4f1ea, 0.3), 1.0, 1.062, 0.15, 16); cyl(g, 0.075, 0.055, 0.11, S(0xf4f1ea, 0.3), 1.0, 1.12, 0.15, 14);
+        var sm = new T.MeshBasicMaterial({color:0xffffff, transparent:true, opacity:0.35, fog:false});
+        Z.steam = [0, 1].map(function(){ var m = new T.Mesh(new T.SphereGeometry(0.03, 8, 6), sm); g.add(m); return m; });
+      }
+      if (b.id === "dip") for (n = 0; n < 8; n++){ box(g, 0.34, 0.07, 0.17, S(0x3f7f57, 0.8), 0.95 + (n % 2) * 0.38, 1.09 + (n >> 1) * 0.075, -0.05); }
+      if (b.id === "rotation") for (n = 0; n < 3; n++){ box(g, 0.26, 0.07, 0.12, brass, 1.0 + (n === 2 ? 0.07 : n * 0.14) , 1.09 + (n === 2 ? 0.075 : 0), 0.0); }
+      if (b.id === "trend"){ box(g, 0.36, 0.07, 0.3, S(0x141414, 0.4), 0.75, 1.085, 0.7); box(g, 0.09, 0.06, 0.34, S(0x141414, 0.4), 0.64, 1.15, 0.7); }
+    }
+
+    /* camera: from above by default, drag to orbit, tap a name to move in on that office */
+    var az = 0.12, el = 1.2, elGoal = null, lastTouch = -9999, drag = null, v = new T.Vector3(), clockT = 0;
+    var focus = null, tgt = new T.Vector3(0, 0.4, 0.8), goal = new T.Vector3(), rCur = 0;
+    function place(t){
+      var w = stage.clientWidth, h = stage.clientHeight, tall = w / h < 1.2, ease = reduce ? 1 : 0.07;
+      var a = az + (reduce || t - lastTouch < 5 ? 0 : Math.sin(t * 0.22) * 0.07);
+      if (elGoal !== null){ el += (elGoal - el) * ease; if (Math.abs(elGoal - el) < 0.004){ el = elGoal; elGoal = null; } }
+      var k = Math.max(0, Math.min(1, (el - 0.3) / 0.9));           // 0 = floor level, 1 = from above
+      var rr = focus ? (tall ? 20 : 14) : (tall ? 52 + k * 14 : 39 + k * 8);
+      if (focus) goal.set(zones[focus].g.position.x + 0.2, 1.1, zones[focus].g.position.z + 0.3);
+      else goal.set(0, 1.2 - 0.8 * k, 1.6 - 0.4 * k);
+      if (!rCur){ rCur = rr; tgt.copy(goal); }
+      rCur += (rr - rCur) * ease; tgt.lerp(goal, ease);
+      camera.aspect = w / h; camera.updateProjectionMatrix();
+      camera.position.set(tgt.x + Math.sin(a) * Math.cos(el) * rCur, tgt.y + Math.sin(el) * rCur, tgt.z + Math.cos(a) * Math.cos(el) * rCur);
+      camera.lookAt(tgt);
+    }
+    stage.addEventListener("pointerdown", function(e){
+      if (e.target.closest(".tag") || e.target.closest(".views")) return;
+      drag = {x:e.clientX, y:e.clientY, mouse:e.pointerType === "mouse"}; stage.classList.add("dragging");
+    });
+    window.addEventListener("pointermove", function(e){
+      if (!drag) return;
+      az = Math.max(-0.7, Math.min(0.7, az - (e.clientX - drag.x) * 0.006));
+      if (drag.mouse){ elGoal = null; el = Math.max(0.1, Math.min(1.42, el + (e.clientY - drag.y) * 0.004)); views(); }
+      drag.x = e.clientX; drag.y = e.clientY; lastTouch = clockT; $("hint").hidden = true;
+      if (reduce) frame(0);
+    });
+    function views(){
+      var above = (elGoal !== null ? elGoal : el) > 0.75;
+      $("v-above").setAttribute("aria-pressed", above); $("v-floor").setAttribute("aria-pressed", !above);
+    }
+    $("v-above").addEventListener("click", function(){ elGoal = 1.2; views(); if (reduce) frame(0); });
+    $("v-floor").addEventListener("click", function(){ elGoal = 0.3; views(); if (reduce) frame(0); });
+    $("v-whole").addEventListener("click", function(){ focus = null; $("v-whole").hidden = true; if (reduce) frame(0); });
+    function setFocus(id){ focus = id; $("v-whole").hidden = !id; if (reduce) frame(0); }
+    function endDrag(){ drag = null; stage.classList.remove("dragging"); }
+    window.addEventListener("pointerup", endDrag); window.addEventListener("pointercancel", endDrag);
+
+    function size(){
+      var w = stage.clientWidth, h = stage.clientHeight; if (!w || !h) return;
+      renderer.setSize(w, h, false);
+      if (reduce) frame(0);
+    }
+    if (window.ResizeObserver) new ResizeObserver(size).observe(stage); else window.addEventListener("resize", size);
+
+    /* talking: one speech bubble at a time */
+    var speaker = 0, spoken = {}, bubble = $("bubble");
+    function speak(){
+      if (clockT < holdUntil) return;
+      var b = BOTS[speaker % BOTS.length]; speaker++;
+      spoken[b.id] = ((spoken[b.id] || 0) + 1) % b.quips.length;
+      bubble.textContent = b.quips[spoken[b.id]]; bubble.hidden = false; bubble.dataset.id = b.id;
+    }
+
+    function sync(){
+      BOTS.forEach(function(b){
+        var Z = zones[b.id], role = roleOf(b);
+        Z.trophy.visible = role === "top"; Z.copier.visible = role === "last";
+        Z.rugMat.color.setHex(role === "top" ? 0x6f5520 : role === "last" ? 0x33343a : 0x1c3a30).convertSRGBToLinear();
+        Z.rugMat.emissive.setHex(b.id === selected ? 0x1c1a0c : 0x000000);
+        Z.tag.setAttribute("aria-pressed", b.id === selected);
+      });
+      paintBoard(); paintLed();
+      if (reduce) frame(0);
+    }
+
+    function rest(Z){
+      var st = Z.state, A = Z.arms;
+      if (st === "phone"){ pose(A[1], 0, 2.0, 0, 2.2); pose(A[0], -0.5, 0.1, -1.0, 0); }
+      else if (st === "feet"){ pose(A[0], 0.25, 2.0, 0, 2.3); pose(A[1], 0.25, 2.0, 0, 2.3); }
+      else if (st === "despair"){ pose(A[0], -0.4, 2.0, 0, 2.25); pose(A[1], -0.4, 2.0, 0, 2.25); }
+      else if (st === "swivel"){ pose(A[0], -0.3, 0.25, -1.1, 0); pose(A[1], -0.3, 0.25, -1.1, 0); }
+      else { pose(A[0], -0.5, 0.05, -1.1, 0); pose(A[1], -0.5, 0.05, -1.1, 0); }
+      Z.head.rotation.set(0, 0, 0); Z.mouth.scale.y = 1;
+    }
+    function mix(arm, shx, shz, elx, elz, e){
+      var r = arm.sh.rotation, q = arm.el.rotation;
+      r.x += (shx - r.x) * e; r.z += (shz * arm.side - r.z) * e; q.x += (elx - q.x) * e; q.z += (elz * arm.side - q.z) * e;
+    }
+    var DUR = {sip:3.2, stretch:3.0, pump:1.8, watch:2.6, glasses:1.8, coin:1.6, count:3.0, slam:3.4, peek:3.0, toss:2.2};
+    function endBit(Z){
+      Z.sipCup.visible = false; if (Z.coin) Z.coin.visible = false; if (Z.paper) Z.paper.visible = false; if (Z.phone) Z.phone.visible = true;
+    }
+    function doBit(Z, bit, p, e){
+      var A = Z.arms, H = Z.head.rotation;
+      if (bit === "stretch"){ mix(A[0], 0.3, 2.85, 0, 0.15, e); mix(A[1], 0.3, 2.85, 0, 0.15, e); H.x += (-0.3 - H.x) * e; }
+      else if (bit === "pump"){ mix(A[1], -0.2, 2.5, 0, 1.3 + Math.sin(p * 20) * 0.5, e); Z.mouth.scale.y = 1 + 2 * e; }
+      else if (bit === "watch"){ mix(A[0], -0.9, 0.25, -1.7, 0, e); H.x += (0.4 - H.x) * e; H.y += (-0.35 - H.y) * e; }
+      else if (bit === "sip"){ mix(A[1], -1.0, 0.2, -2.0, 0, e); H.x += (-0.15 - H.x) * e; Z.sipCup.visible = true; }
+      else if (bit === "glasses"){ mix(A[1], -1.1, 0.3, -2.05, 0, e); }
+      else if (bit === "count"){ mix(A[0], -0.6, 0.05, -1.2 + Math.sin(p * 44) * 0.14, 0, e); mix(A[1], -0.6, 0.05, -1.2 - Math.sin(p * 44) * 0.14, 0, e); H.x += (0.3 - H.x) * e; H.y *= (1 - e); }
+      else if (bit === "slam"){ Z.phone.visible = e < 0.5; mix(A[1], -0.5, 0.05, -1.1, 0, e); H.x += (0.25 - H.x) * e; H.y *= (1 - e); H.z = 0; if (e > 0.5) Z.mouth.scale.y = 1; }
+      else if (bit === "peek"){ mix(A[0], -0.5, 0.05, -1.1, 0, e); mix(A[1], -0.5, 0.05, -1.1, 0, e); H.x *= (1 - e); H.y += (-0.6 - H.y) * e; }
+      else if (bit === "coin"){
+        mix(A[1], -0.8, 0.2, -1.2, 0, e);
+        Z.coin.visible = true; Z.coin.position.set(0.72, 1.55 + 4.2 * p * (1 - p), -0.4); Z.coin.rotation.x = p * 40;
+      } else if (bit === "toss"){
+        var th = Math.min(1, p * 3); mix(A[1], -0.4 - th, 0.4, -1.4 + th, 0, e);
+        var f = Math.max(0, (p - 0.3) / 0.7); Z.paper.visible = p > 0.3 && f < 0.98;
+        Z.paper.position.set(0.9 + (3.4 - 0.9) * f, 2.1 + (0.5 - 2.1) * f + 2.6 * f * (1 - f), -0.8 + 2.0 * f);
+      }
+    }
+    function move(Z, q, t){
+      var st = Z.state, k;
+      rest(Z);
+      Z.body.position.y = 0.66 + Math.sin(q * 1.8) * 0.012;
+      var blink = (q % 4.1) < 0.12; Z.eyes.forEach(function(e){ e.scale.y = blink ? 0.15 : 1; });
+      if (st === "phone"){
+        Z.head.rotation.z = Math.sin(q * 8) * 0.03; Z.head.rotation.y = Math.sin(q * 1.2) * 0.35;
+        Z.mouth.scale.y = (Math.floor(q * 6) % 2) ? 3 : 1;
+        pose(Z.arms[0], -0.7 + Math.sin(q * 4) * 0.35, 0.2, -1.1 + Math.sin(q * 4 + 1) * 0.3, 0);
+      } else if (st === "feet"){
+        Z.head.rotation.y = Math.sin(q * 0.5) * 0.3;
+        Z.shoes[0].rotation.z = Math.sin(q * 2.4) * 0.22; Z.shoes[1].rotation.z = Math.sin(q * 2.4 + 1.4) * 0.22;
+      } else if (st === "despair"){
+        Z.head.rotation.x = 0.5; Z.head.rotation.y = Math.sin(q * 4.5) * 0.2;
+        Z.drops.forEach(function(dm, n){ k = (q * 0.9 + n * 0.5) % 1; dm.position.y = 1.36 - k * 0.8; dm.visible = k < 0.85; });
+      } else if (st === "swivel"){
+        Z.seat.rotation.y = Math.sin(q * 0.8) * 1.2 + (q % 14 > 12.4 ? (q % 14 - 12.4) / 1.6 * Math.PI * 2 : 0);
+      } else if (st === "type"){
+        Z.arms[0].el.rotation.x = -1.1 + (Math.floor(q * 8) % 2) * 0.12; Z.arms[1].el.rotation.x = -1.1 + (Math.floor(q * 8 + 1) % 2) * 0.12;
+        Z.head.rotation.x = 0.14; Z.head.rotation.y = Math.sin(q * 0.4) * 0.12;
+      } else { Z.head.rotation.y = Math.sin(q * 0.5) * 0.5; Z.head.rotation.x = 0.05; }
+      if (reduce) return;
+      if (!Z.bit && t > Z.nextBit){ Z.bit = Z.bits[Math.floor(Math.random() * Z.bits.length)]; Z.bitT = t; }
+      if (Z.bit){
+        var p = (t - Z.bitT) / DUR[Z.bit];
+        if (p >= 1){ endBit(Z); Z.bit = null; Z.nextBit = t + 4 + Math.random() * 8; }
+        else if (p >= 0) doBit(Z, Z.bit, p, Math.min(1, p * 5) * Math.min(1, (1 - p) * 5));
+      }
+    }
+
+    /* the coffee run: a loop through the corridor and into every office */
+    var W = {g:new T.Group(), state:"walk"}; scene.add(W.g);
+    person(W, W.g, {suit:0xf4f1ea, skin:0xd9a070, hair:0x7a3b1e, style:"side", tie:0x1f3d33}, "walk", false);
+    var LB = -4.3, LF = 4.3, WP = [];
+    function wp(x, z, stop){ WP.push({x:x, z:z, stop:stop || null}); }
+    function visit(doorX, deskX, back, id){
+      var lane = back ? LB : LF, inZ = back ? -5.7 : 5.7, deskZ = back ? -8.1 : 8.8;
+      wp(doorX, lane); wp(doorX, inZ); wp(deskX, deskZ, id); wp(doorX, inZ); wp(doorX, lane);
+    }
+    wp(11.3, 0.3, "station"); wp(10.8, LB);
+    visit(15.9, 14.4, true, "dip"); visit(3.9, 2.4, true, "trend"); visit(-8.1, -9.6, true, "core");
+    wp(-4.3, LB); wp(-4.3, LF);
+    visit(-8.1, -9.6, false, "rotation"); visit(3.9, 2.4, false, "balanced"); visit(15.9, 14.4, false, "spy");
+    wp(10.8, LF);
+    var ORDERS = {core:"Double espresso. Nick's fourth today.", trend:"Decaf for Tristan. Nobody tell him.", dip:"Chamomile for Myles. Breathe.",
+                  rotation:"Whatever is trendy this month, Koby.", balanced:"Tea for Eli. Two sugars, as budgeted.", spy:"Water for Joel. Top performer.", station:"Fresh pot. Who's next?"};
+    var wAt = 0, wPause = 0, wLast = 0, holdUntil = 0;
+    W.g.position.set(WP[0].x, 0, WP[0].z); W.g.rotation.y = -Math.PI / 2;
+    function coffee(t){
+      var dt = Math.min(0.1, t - wLast); wLast = t;
+      if (wPause > 0){
+        wPause -= dt; W.legs[0].rotation.x *= 0.8; W.legs[1].rotation.x *= 0.8; W.arms[0].sh.rotation.x *= 0.8;
+        W.body.position.y = 0.92; return;
+      }
+      var to = WP[(wAt + 1) % WP.length], dx = to.x - W.g.position.x, dz = to.z - W.g.position.z, d = Math.sqrt(dx * dx + dz * dz), stepLen = 1.7 * dt;
+      if (d <= stepLen){
+        W.g.position.set(to.x, 0, to.z); wAt = (wAt + 1) % WP.length;
+        if (to.stop){
+          wPause = to.stop === "station" ? 4 : 2.8;
+          if (zones[to.stop]){
+            var Z = zones[to.stop]; W.g.rotation.y = Math.atan2(Z.g.position.x + 0.3 - to.x, Z.g.position.z - 0.4 - to.z);
+            Z.cup.visible = true; Z.cupT = t; if (Z.leaves) Z.rustle = t; else if (Z.body && !Z.bit){ Z.bit = "sip"; Z.bitT = t + 1.2; }
+          }
+          bubble.textContent = ORDERS[to.stop]; bubble.hidden = false; bubble.dataset.id = "coffee"; holdUntil = t + 3.2;
+        }
+        return;
+      }
+      W.g.position.x += dx / d * stepLen; W.g.position.z += dz / d * stepLen;
+      var want = Math.atan2(dx, dz), diff = Math.atan2(Math.sin(want - W.g.rotation.y), Math.cos(want - W.g.rotation.y));
+      W.g.rotation.y += diff * 0.2;
+      var ph = t * 7.5;
+      W.legs[0].rotation.x = Math.sin(ph) * 0.55; W.legs[1].rotation.x = -Math.sin(ph) * 0.55;
+      W.arms[0].sh.rotation.x = -Math.sin(ph) * 0.45; W.body.position.y = 0.92 + Math.abs(Math.cos(ph)) * 0.03;
+      W.head.rotation.y = Math.sin(t * 0.7) * 0.25;
+    }
+
+    /* things that pass by: a paper plane inside, a helicopter and a blimp outside */
+    var plane = new T.Mesh(new T.ConeGeometry(0.12, 0.5, 3), S(0xffffff, 0.8)); plane.scale.z = 0.25; plane.visible = false; scene.add(plane);
+    var planeT = 9, planeA = 0, planeB = 4;
+    var heli = new T.Group(); scene.add(heli);
+    ball(heli, 1.1, S(0x1d2433, 0.3, 0.4), 0, 0, 0, 1.6, 1, 1); box(heli, 3.2, 0.25, 0.25, S(0x1d2433, 0.3, 0.4), -2.4, 0.2, 0); box(heli, 0.1, 0.9, 0.5, S(0x1d2433, 0.3, 0.4), -3.9, 0.5, 0);
+    var rotor = box(heli, 5.2, 0.05, 0.3, S(0x0c0c0c, 0.5), 0, 1.25, 0); rotor.castShadow = false;
+    var beacon = new T.Mesh(new T.SphereGeometry(0.22, 8, 6), new T.MeshBasicMaterial({color:0xff3b30, fog:false})); beacon.position.set(0, -1.1, 0); heli.add(beacon);
+    var blimp = new T.Group(); scene.add(blimp);
+    ball(blimp, 7, S(0xe9e4d6, 0.5), 0, 0, 0, 2.5, 1, 1); box(blimp, 5, 1.2, 1.6, S(0x1b2a4a, 0.5), 0, -7.2, 0);
+    box(blimp, 3, 4, 0.3, S(0xb8923f, 0.4, 0.6), -15.5, 0, 0); box(blimp, 3, 0.3, 4, S(0xb8923f, 0.4, 0.6), -15.5, 0, 0);
+    var sign = tex(512, 128); sign.g.fillStyle = "#12241d"; sign.g.fillRect(0, 0, 512, 128);
+    sign.g.font = "bold 96px Georgia, serif"; sign.g.textAlign = "center"; sign.g.textBaseline = "middle"; sign.g.fillStyle = "#e6c670"; sign.g.fillText("WBFP", 256, 68);
+    var s1 = screen(blimp, 20, 5, sign, 0, 0, 7.05), s2 = screen(blimp, 20, 5, sign, 0, 0, -7.05); s2.rotation.y = Math.PI;
+    function passersby(t){
+      heli.position.set(Math.cos(t * 0.11) * 78 - 8, 10 + Math.sin(t * 0.3) * 3, Math.sin(t * 0.11) * 62 - 6);
+      heli.rotation.y = -t * 0.11 - Math.PI / 2; heli.rotation.z = -0.12; rotor.rotation.y = t * 30; beacon.visible = (t * 2 % 1) < 0.5;
+      var bx = ((t * 1.6 + 150) % 420) - 250; blimp.position.set(bx, 26 + Math.sin(t * 0.2) * 1.5, -95);
+      if (t > planeT){
+        var f = (t - planeT) / 1.8;
+        if (f >= 1){ plane.visible = false; planeT = t + 9 + Math.random() * 10; planeA = Math.floor(Math.random() * 6); planeB = (planeA + 1 + Math.floor(Math.random() * 5)) % 6; }
+        else {
+          var A = juniors[planeA].g.position, B = juniors[planeB].g.position;
+          plane.visible = true; plane.position.set(A.x + (B.x - A.x) * f, 2.2 + 2.2 * f * (1 - f) * 2, A.z + (B.z - A.z) * f);
+          plane.rotation.set(Math.PI / 2, 0, -Math.atan2(B.x - A.x, B.z - A.z)); plane.rotation.order = "YXZ";
+          plane.rotation.set(Math.PI / 2 - (0.5 - f) * 0.8, Math.atan2(B.x - A.x, B.z - A.z), 0);
+        }
+      }
+    }
+
+    var step = -1;
+    function frame(t){
+      clockT = t;
+      var s = Math.floor(t * 9);
+      if (s !== step){ step = s; BOTS.forEach(function(b){ paintScreen(zones[b.id], s); }); }
+      led.t.offset.x = t * 0.03;
+      hH.rotation.z = -((now.h % 12) + now.m / 60) / 12 * Math.PI * 2;
+      hM.rotation.z = -(now.m / 60) * Math.PI * 2; hS.rotation.z = -(now.s / 60) * Math.PI * 2;
+
+      BOTS.forEach(function(b){
+        var Z = zones[b.id], q = t + Z.seed, k;
+        if (Z.body) move(Z, q, t);
+        if (Z.leaves){
+          Z.leaves.rotation.z = Math.sin(q * 0.8) * 0.05; Z.leaves.rotation.x = Math.sin(q * 0.6) * 0.035;
+          k = (q * 0.1) % 1; Z.leaf.position.set(0.9 + Math.sin(k * 12) * 0.25, 2.4 - k * 2.4, -0.6); Z.leaf.rotation.z = k * 9; Z.leaf.visible = k < 0.96;
+        }
+        if (Z.steam) Z.steam.forEach(function(m, n){ k = (q * 0.5 + n * 0.5) % 1; m.position.set(1.0 + Math.sin(k * 7 + n) * 0.04, 1.2 + k * 0.4, 0.15); m.scale.setScalar(1 + k * 1.5); m.visible = k < 0.9; });
+        if (Z.copier.visible){ Z.scan.position.x = Math.sin(q * 1.6) * 0.45; Z.sheet.position.x = -0.7 - ((q * 0.3) % 1) * 0.25; }
+      });
+      juniors.forEach(function(J){ move(J, t + J.seed, t); });
+      BOTS.forEach(function(b){
+        var Z = zones[b.id];
+        if (Z.cup.visible && t - Z.cupT > 45) Z.cup.visible = false;
+        if (Z.leaves && Z.rustle && t - Z.rustle < 1.6){ Z.leaves.rotation.z = Math.sin(t * 30) * 0.12 * (1 - (t - Z.rustle) / 1.6); Z.leaves.scale.setScalar(1 + 0.08 * Math.sin((t - Z.rustle) / 1.6 * Math.PI)); }
+      });
+      if (!reduce){ coffee(t); passersby(t); }
+      place(t);
+      renderer.render(scene, camera);
+
+      var w = stage.clientWidth, h = stage.clientHeight;
+      BOTS.forEach(function(b){
+        var Z = zones[b.id];
+        v.copy(Z.pos).project(camera);
+        var sx = (v.x * 0.5 + 0.5) * w, sy = (-v.y * 0.5 + 0.5) * h;
+        Z.tag.style.left = sx + "px"; Z.tag.style.top = sy + "px";
+        if (!bubble.hidden && bubble.dataset.id === b.id){
+          bubble.style.left = Math.max(100, Math.min(w - 100, sx)) + "px"; bubble.style.top = Math.max(64, sy - 34) + "px";
+        }
+      });
+      if (!bubble.hidden && bubble.dataset.id === "coffee"){
+        v.set(W.g.position.x, 2.75, W.g.position.z).project(camera);
+        bubble.style.left = Math.max(100, Math.min(w - 100, (v.x * 0.5 + 0.5) * w)) + "px"; bubble.style.top = Math.max(64, (-v.y * 0.5 + 0.5) * h) + "px";
+      }
+    }
+
+    size();
+    if (reduce){ speak(); frame(0); }
+    else {
+      speak(); setInterval(speak, 3400);
+      var t0 = performance.now();
+      (function loop(){ frame((performance.now() - t0) / 1000); requestAnimationFrame(loop); })();
+    }
+    function react(id, kind){
+      var Z = zones[id]; if (!Z) return;
+      if (Z.leaves){ Z.rustle = clockT; return; }
+      if (Z.bit) endBit(Z);
+      Z.bit = kind === "trade" ? "pump" : "watch"; Z.bitT = clockT;
+    }
+    return {sync:sync, focus:setFocus, react:react};
+  }
+})();
+</script>
+</body></html>
