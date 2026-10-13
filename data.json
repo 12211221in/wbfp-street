@@ -1,24 +1,24 @@
 {
- "updated_utc": "2026-10-13 20:12",
+ "updated_utc": "2026-10-13 21:12",
  "day": "2026-10-13",
  "mode": "practice",
  "started": "2026-10-07",
  "days": 5,
- "total_value": 100044.65,
+ "total_value": 100030.99,
  "bots": [
   {
    "id": "core",
    "name": "Core (50% SPY, 50% QQQ, held)",
-   "value": 40043.35,
-   "share": 0.4003,
+   "value": 40033.11,
+   "share": 0.4002,
    "cash": 800.02,
-   "return": 0.00106,
-   "worst_drop": -0.00554,
-   "day_change": -0.00121,
+   "return": 0.0008,
+   "worst_drop": -0.00579,
+   "day_change": -0.00147,
    "holdings": {
     "QQQ": {
      "shares": 26.244304,
-     "value": 19522.88
+     "value": 19512.64
     },
     "SPY": {
      "shares": 25.346642,
@@ -30,16 +30,16 @@
   {
    "id": "trend",
    "name": "Trend (SPY and QQQ, 200-day filter)",
-   "value": 15016.25,
+   "value": 15012.42,
    "share": 0.1501,
    "cash": 300.01,
-   "return": 0.00106,
-   "worst_drop": -0.00554,
-   "day_change": -0.00121,
+   "return": 0.0008,
+   "worst_drop": -0.00579,
+   "day_change": -0.00147,
    "holdings": {
     "QQQ": {
      "shares": 9.841614,
-     "value": 7321.08
+     "value": 7317.24
     },
     "SPY": {
      "shares": 9.504991,
@@ -52,7 +52,7 @@
    "id": "dip",
    "name": "Dip buyer (RSI on SPY, QQQ, AAPL)",
    "value": 15000.43,
-   "share": 0.1499,
+   "share": 0.15,
    "cash": 15000.43,
    "return": 0.0,
    "worst_drop": 0.0,
@@ -63,20 +63,20 @@
   {
    "id": "rotation",
    "name": "Rotation (top 3 of 19 ETFs)",
-   "value": 14924.99,
+   "value": 14925.4,
    "share": 0.1492,
    "cash": 300.01,
-   "return": -0.00503,
-   "worst_drop": -0.01326,
-   "day_change": -0.00327,
+   "return": -0.005,
+   "worst_drop": -0.01323,
+   "day_change": -0.00324,
    "holdings": {
     "EEM": {
      "shares": 74.250165,
-     "value": 4879.72
+     "value": 4882.69
     },
     "QQQ": {
      "shares": 6.561076,
-     "value": 4880.72
+     "value": 4878.16
     },
     "XLK": {
      "shares": 24.807693,
@@ -227,14 +227,14 @@
    1.00165,
    1.00663,
    1.00227,
-   1.00106
+   1.0008
   ],
   "trend": [
    1.0,
    1.00165,
    1.00663,
    1.00227,
-   1.00106
+   1.0008
   ],
   "dip": [
    1.0,
@@ -248,7 +248,7 @@
    1.00188,
    1.00834,
    0.99824,
-   0.99497
+   0.995
   ],
   "balanced": [
    1.0,
