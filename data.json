@@ -1,28 +1,28 @@
 {
- "updated_utc": "2026-10-16 16:15",
+ "updated_utc": "2026-10-16 17:14",
  "day": "2026-10-16",
  "mode": "practice",
  "started": "2026-10-07",
  "days": 8,
- "total_value": 98035.7,
+ "total_value": 97525.86,
  "bots": [
   {
    "id": "core",
    "name": "Core (50% SPY, 50% QQQ, held)",
-   "value": 39096.03,
-   "share": 0.3988,
+   "value": 38864.78,
+   "share": 0.3985,
    "cash": 800.02,
-   "return": -0.02263,
-   "worst_drop": -0.02907,
-   "day_change": -0.00883,
+   "return": -0.02841,
+   "worst_drop": -0.03481,
+   "day_change": -0.01469,
    "holdings": {
     "QQQ": {
      "shares": 26.244304,
-     "value": 18826.75
+     "value": 18705.63
     },
     "SPY": {
      "shares": 25.346642,
-     "value": 19469.26
+     "value": 19359.13
     }
    },
    "traded_today": false
@@ -30,20 +30,20 @@
   {
    "id": "trend",
    "name": "Trend (SPY and QQQ, 200-day filter)",
-   "value": 14661.01,
-   "share": 0.1495,
+   "value": 14574.29,
+   "share": 0.1494,
    "cash": 300.01,
-   "return": -0.02263,
-   "worst_drop": -0.02907,
-   "day_change": -0.00883,
+   "return": -0.02841,
+   "worst_drop": -0.03481,
+   "day_change": -0.01469,
    "holdings": {
     "QQQ": {
      "shares": 9.841614,
-     "value": 7060.03
+     "value": 7014.61
     },
     "SPY": {
      "shares": 9.504991,
-     "value": 7300.97
+     "value": 7259.67
     }
    },
    "traded_today": false
@@ -51,20 +51,20 @@
   {
    "id": "dip",
    "name": "Dip buyer (RSI on SPY, QQQ, AAPL)",
-   "value": 14981.32,
-   "share": 0.1528,
+   "value": 14922.21,
+   "share": 0.153,
    "cash": 5200.15,
-   "return": -0.00127,
-   "worst_drop": -0.00595,
-   "day_change": -0.00595,
+   "return": -0.00521,
+   "worst_drop": -0.00987,
+   "day_change": -0.00987,
    "holdings": {
     "QQQ": {
      "shares": 6.7998,
-     "value": 4877.94
+     "value": 4846.56
     },
     "SPY": {
      "shares": 6.383424,
-     "value": 4903.24
+     "value": 4875.5
     }
    },
    "traded_today": false
@@ -72,24 +72,24 @@
   {
    "id": "rotation",
    "name": "Rotation (top 3 of 19 ETFs)",
-   "value": 14303.74,
-   "share": 0.1459,
+   "value": 14220.54,
+   "share": 0.1458,
    "cash": 300.01,
-   "return": -0.04644,
-   "worst_drop": -0.05433,
-   "day_change": -0.01428,
+   "return": -0.05199,
+   "worst_drop": -0.05983,
+   "day_change": -0.02001,
    "holdings": {
     "EEM": {
      "shares": 74.250165,
-     "value": 4692.24
+     "value": 4671.08
     },
     "QQQ": {
      "shares": 6.561076,
-     "value": 4706.69
+     "value": 4676.41
     },
     "XLK": {
      "shares": 24.807693,
-     "value": 4604.8
+     "value": 4573.05
     }
    },
    "traded_today": false
@@ -97,12 +97,12 @@
   {
    "id": "balanced",
    "name": "Balanced (60% SPY, 40% bonds)",
-   "value": 14993.59,
-   "share": 0.1529,
+   "value": 14944.03,
+   "share": 0.1532,
    "cash": 300.01,
-   "return": -0.00046,
-   "worst_drop": -0.00617,
-   "day_change": -0.00312,
+   "return": -0.00376,
+   "worst_drop": -0.00768,
+   "day_change": -0.00641,
    "holdings": {
     "IEF": {
      "shares": 65.722226,
@@ -110,7 +110,7 @@
     },
     "SPY": {
      "shares": 11.405989,
-     "value": 8761.17
+     "value": 8711.61
     }
    },
    "traded_today": false
@@ -119,8 +119,8 @@
  "benchmark": {
   "id": "spy",
   "name": "SPY buy and hold",
-  "return": -0.01181,
-  "worst_drop": -0.01346
+  "return": -0.0174,
+  "worst_drop": -0.01904
  },
  "recent": [
   {
@@ -264,7 +264,7 @@
    1.0008,
    0.98467,
    0.98608,
-   0.97737
+   0.97159
   ],
   "trend": [
    1.0,
@@ -274,7 +274,7 @@
    1.0008,
    0.98467,
    0.98608,
-   0.97737
+   0.97159
   ],
   "dip": [
    1.0,
@@ -284,7 +284,7 @@
    1.0,
    1.0,
    1.0047,
-   0.99873
+   0.99479
   ],
   "rotation": [
    1.0,
@@ -294,7 +294,7 @@
    0.995,
    0.9719,
    0.96737,
-   0.95356
+   0.94801
   ],
   "balanced": [
    1.0,
@@ -304,7 +304,7 @@
    1.00395,
    0.99775,
    1.00267,
-   0.99954
+   0.99624
   ],
   "spy": [
    1.0,
@@ -314,7 +314,7 @@
    1.00094,
    0.98912,
    0.99277,
-   0.98819
+   0.9826
   ]
  }
 }
