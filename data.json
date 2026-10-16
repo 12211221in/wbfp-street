@@ -1,28 +1,28 @@
 {
- "updated_utc": "2026-10-16 18:10",
+ "updated_utc": "2026-10-16 19:15",
  "day": "2026-10-16",
  "mode": "practice",
  "started": "2026-10-07",
  "days": 8,
- "total_value": 97392.38,
+ "total_value": 97383.99,
  "bots": [
   {
    "id": "core",
    "name": "Core (50% SPY, 50% QQQ, held)",
-   "value": 38796.53,
-   "share": 0.3984,
+   "value": 38792.0,
+   "share": 0.3983,
    "cash": 800.02,
-   "return": -0.03011,
-   "worst_drop": -0.0365,
-   "day_change": -0.01642,
+   "return": -0.03023,
+   "worst_drop": -0.03662,
+   "day_change": -0.01654,
    "holdings": {
     "QQQ": {
      "shares": 26.244304,
-     "value": 18659.18
+     "value": 18648.94
     },
     "SPY": {
      "shares": 25.346642,
-     "value": 19337.33
+     "value": 19343.04
     }
    },
    "traded_today": false
@@ -30,20 +30,20 @@
   {
    "id": "trend",
    "name": "Trend (SPY and QQQ, 200-day filter)",
-   "value": 14548.7,
+   "value": 14547.0,
    "share": 0.1494,
    "cash": 300.01,
-   "return": -0.03011,
-   "worst_drop": -0.0365,
-   "day_change": -0.01642,
+   "return": -0.03023,
+   "worst_drop": -0.03662,
+   "day_change": -0.01654,
    "holdings": {
     "QQQ": {
      "shares": 9.841614,
-     "value": 6997.19
+     "value": 6993.35
     },
     "SPY": {
      "shares": 9.504991,
-     "value": 7251.5
+     "value": 7253.64
     }
    },
    "traded_today": false
@@ -51,20 +51,20 @@
   {
    "id": "dip",
    "name": "Dip buyer (RSI on SPY, QQQ, AAPL)",
-   "value": 14904.68,
+   "value": 14903.46,
    "share": 0.153,
    "cash": 5200.15,
-   "return": -0.00638,
-   "worst_drop": -0.01103,
-   "day_change": -0.01103,
+   "return": -0.00646,
+   "worst_drop": -0.01111,
+   "day_change": -0.01111,
    "holdings": {
     "QQQ": {
      "shares": 6.7998,
-     "value": 4834.52
+     "value": 4831.87
     },
     "SPY": {
      "shares": 6.383424,
-     "value": 4870.01
+     "value": 4871.45
     }
    },
    "traded_today": false
@@ -72,24 +72,24 @@
   {
    "id": "rotation",
    "name": "Rotation (top 3 of 19 ETFs)",
-   "value": 14205.95,
-   "share": 0.1459,
+   "value": 14195.21,
+   "share": 0.1458,
    "cash": 300.01,
-   "return": -0.05296,
-   "worst_drop": -0.0608,
-   "day_change": -0.02102,
+   "return": -0.05368,
+   "worst_drop": -0.06151,
+   "day_change": -0.02176,
    "holdings": {
     "EEM": {
      "shares": 74.250165,
-     "value": 4674.05
+     "value": 4671.82
     },
     "QQQ": {
      "shares": 6.561076,
-     "value": 4664.79
+     "value": 4662.23
     },
     "XLK": {
      "shares": 24.807693,
-     "value": 4567.1
+     "value": 4561.14
     }
    },
    "traded_today": false
@@ -97,20 +97,20 @@
   {
    "id": "balanced",
    "name": "Balanced (60% SPY, 40% bonds)",
-   "value": 14936.53,
-   "share": 0.1534,
+   "value": 14946.32,
+   "share": 0.1535,
    "cash": 300.01,
-   "return": -0.00426,
-   "worst_drop": -0.00817,
-   "day_change": -0.00691,
+   "return": -0.00361,
+   "worst_drop": -0.00752,
+   "day_change": -0.00626,
    "holdings": {
     "IEF": {
      "shares": 65.722226,
-     "value": 5934.72
+     "value": 5941.95
     },
     "SPY": {
      "shares": 11.405989,
-     "value": 8701.8
+     "value": 8704.37
     }
    },
    "traded_today": false
@@ -119,8 +119,8 @@
  "benchmark": {
   "id": "spy",
   "name": "SPY buy and hold",
-  "return": -0.01851,
-  "worst_drop": -0.02014
+  "return": -0.01822,
+  "worst_drop": -0.01986
  },
  "recent": [
   {
@@ -264,7 +264,7 @@
    1.0008,
    0.98467,
    0.98608,
-   0.96989
+   0.96977
   ],
   "trend": [
    1.0,
@@ -274,7 +274,7 @@
    1.0008,
    0.98467,
    0.98608,
-   0.96989
+   0.96977
   ],
   "dip": [
    1.0,
@@ -284,7 +284,7 @@
    1.0,
    1.0,
    1.0047,
-   0.99362
+   0.99354
   ],
   "rotation": [
    1.0,
@@ -294,7 +294,7 @@
    0.995,
    0.9719,
    0.96737,
-   0.94704
+   0.94632
   ],
   "balanced": [
    1.0,
@@ -304,7 +304,7 @@
    1.00395,
    0.99775,
    1.00267,
-   0.99574
+   0.99639
   ],
   "spy": [
    1.0,
@@ -314,7 +314,7 @@
    1.00094,
    0.98912,
    0.99277,
-   0.98149
+   0.98178
   ]
  }
 }
