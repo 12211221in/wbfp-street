@@ -1,24 +1,24 @@
 {
- "updated_utc": "2026-10-19 20:15",
+ "updated_utc": "2026-10-19 21:13",
  "day": "2026-10-19",
  "mode": "practice",
  "started": "2026-10-07",
  "days": 9,
- "total_value": 98035.24,
+ "total_value": 98029.31,
  "bots": [
   {
    "id": "core",
    "name": "Core (50% SPY, 50% QQQ, held)",
-   "value": 39096.89,
+   "value": 39093.74,
    "share": 0.3988,
    "cash": 800.02,
-   "return": -0.02261,
+   "return": -0.02268,
    "worst_drop": -0.03676,
-   "day_change": 0.00801,
+   "day_change": 0.00793,
    "holdings": {
     "QQQ": {
      "shares": 26.244304,
-     "value": 18862.83
+     "value": 18859.68
     },
     "SPY": {
      "shares": 25.346642,
@@ -30,16 +30,16 @@
   {
    "id": "trend",
    "name": "Trend (SPY and QQQ, 200-day filter)",
-   "value": 14661.33,
-   "share": 0.1496,
+   "value": 14660.15,
+   "share": 0.1495,
    "cash": 300.01,
-   "return": -0.02261,
+   "return": -0.02268,
    "worst_drop": -0.03676,
-   "day_change": 0.00801,
+   "day_change": 0.00793,
    "holdings": {
     "QQQ": {
      "shares": 9.841614,
-     "value": 7073.56
+     "value": 7072.38
     },
     "SPY": {
      "shares": 9.504991,
@@ -51,16 +51,16 @@
   {
    "id": "dip",
    "name": "Dip buyer (RSI on SPY, QQQ, AAPL)",
-   "value": 14981.8,
+   "value": 14980.98,
    "share": 0.1528,
    "cash": 5200.15,
-   "return": -0.00124,
+   "return": -0.0013,
    "worst_drop": -0.01122,
-   "day_change": 0.00536,
+   "day_change": 0.00531,
    "holdings": {
     "QQQ": {
      "shares": 6.7998,
-     "value": 4887.29
+     "value": 4886.47
     },
     "SPY": {
      "shares": 6.383424,
@@ -72,12 +72,12 @@
   {
    "id": "rotation",
    "name": "Rotation (top 3 of 19 ETFs)",
-   "value": 14328.99,
+   "value": 14328.2,
    "share": 0.1462,
    "cash": 300.01,
-   "return": -0.04476,
+   "return": -0.04481,
    "worst_drop": -0.06312,
-   "day_change": 0.01116,
+   "day_change": 0.0111,
    "holdings": {
     "EEM": {
      "shares": 74.250165,
@@ -85,7 +85,7 @@
     },
     "QQQ": {
      "shares": 6.561076,
-     "value": 4715.71
+     "value": 4714.92
     },
     "XLK": {
      "shares": 24.807693,
@@ -266,7 +266,7 @@
    0.98467,
    0.98608,
    0.96962,
-   0.97739
+   0.97732
   ],
   "trend": [
    1.0,
@@ -277,7 +277,7 @@
    0.98467,
    0.98608,
    0.96962,
-   0.97739
+   0.97732
   ],
   "dip": [
    1.0,
@@ -288,7 +288,7 @@
    1.0,
    1.0047,
    0.99343,
-   0.99876
+   0.9987
   ],
   "rotation": [
    1.0,
@@ -299,7 +299,7 @@
    0.9719,
    0.96737,
    0.9447,
-   0.95524
+   0.95519
   ],
   "balanced": [
    1.0,
