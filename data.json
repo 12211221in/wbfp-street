@@ -1,24 +1,24 @@
 {
- "updated_utc": "2026-10-27 20:22",
+ "updated_utc": "2026-10-27 21:19",
  "day": "2026-10-27",
  "mode": "practice",
  "started": "2026-10-07",
  "days": 15,
- "total_value": 98314.09,
+ "total_value": 98310.68,
  "bots": [
   {
    "id": "core",
    "name": "Core (50% SPY, 50% QQQ, held)",
-   "value": 39224.5,
+   "value": 39222.4,
    "share": 0.399,
    "cash": 800.02,
-   "return": -0.01942,
+   "return": -0.01947,
    "worst_drop": -0.0419,
-   "day_change": 0.00853,
+   "day_change": 0.00847,
    "holdings": {
     "QQQ": {
      "shares": 26.244304,
-     "value": 18918.21
+     "value": 18916.11
     },
     "SPY": {
      "shares": 25.346642,
@@ -30,16 +30,16 @@
   {
    "id": "trend",
    "name": "Trend (SPY and QQQ, 200-day filter)",
-   "value": 14709.19,
+   "value": 14708.4,
    "share": 0.1496,
    "cash": 300.01,
-   "return": -0.01942,
+   "return": -0.01947,
    "worst_drop": -0.0419,
-   "day_change": 0.00853,
+   "day_change": 0.00847,
    "holdings": {
     "QQQ": {
      "shares": 9.841614,
-     "value": 7094.33
+     "value": 7093.54
     },
     "SPY": {
      "shares": 9.504991,
@@ -63,12 +63,12 @@
   {
    "id": "rotation",
    "name": "Rotation (top 3 of 19 ETFs)",
-   "value": 14371.75,
+   "value": 14371.22,
    "share": 0.1462,
    "cash": 300.01,
-   "return": -0.04191,
+   "return": -0.04195,
    "worst_drop": -0.07283,
-   "day_change": 0.01319,
+   "day_change": 0.01316,
    "holdings": {
     "EEM": {
      "shares": 74.250165,
@@ -76,7 +76,7 @@
     },
     "QQQ": {
      "shares": 6.561076,
-     "value": 4729.55
+     "value": 4729.03
     },
     "XLK": {
      "shares": 24.807693,
@@ -291,7 +291,7 @@
    0.96584,
    0.96445,
    0.97229,
-   0.98058
+   0.98053
   ],
   "trend": [
    1.0,
@@ -308,7 +308,7 @@
    0.96584,
    0.96445,
    0.97229,
-   0.98058
+   0.98053
   ],
   "dip": [
    1.0,
@@ -342,7 +342,7 @@
    0.93491,
    0.93843,
    0.94561,
-   0.95809
+   0.95805
   ],
   "balanced": [
    1.0,
