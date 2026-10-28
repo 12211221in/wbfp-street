@@ -1,28 +1,28 @@
 {
- "updated_utc": "2026-10-28 15:35",
+ "updated_utc": "2026-10-28 16:34",
  "day": "2026-10-28",
  "mode": "practice",
  "started": "2026-10-07",
  "days": 16,
- "total_value": 98490.74,
+ "total_value": 98507.95,
  "bots": [
   {
    "id": "core",
    "name": "Core (50% SPY, 50% QQQ, held)",
-   "value": 39296.52,
+   "value": 39302.71,
    "share": 0.399,
    "cash": 800.02,
-   "return": -0.01762,
+   "return": -0.01746,
    "worst_drop": -0.0419,
-   "day_change": 0.00189,
+   "day_change": 0.00205,
    "holdings": {
     "QQQ": {
      "shares": 26.244304,
-     "value": 18948.91
+     "value": 18955.74
     },
     "SPY": {
      "shares": 25.346642,
-     "value": 19547.58
+     "value": 19546.95
     }
    },
    "traded_today": false
@@ -30,20 +30,20 @@
   {
    "id": "trend",
    "name": "Trend (SPY and QQQ, 200-day filter)",
-   "value": 14736.19,
+   "value": 14738.52,
    "share": 0.1496,
    "cash": 300.01,
-   "return": -0.01762,
+   "return": -0.01746,
    "worst_drop": -0.0419,
-   "day_change": 0.00189,
+   "day_change": 0.00205,
    "holdings": {
     "QQQ": {
      "shares": 9.841614,
-     "value": 7105.84
+     "value": 7108.4
     },
     "SPY": {
      "shares": 9.504991,
-     "value": 7330.34
+     "value": 7330.11
     }
    },
    "traded_today": false
@@ -52,7 +52,7 @@
    "id": "dip",
    "name": "Dip buyer (RSI on SPY, QQQ, AAPL)",
    "value": 14946.82,
-   "share": 0.1518,
+   "share": 0.1517,
    "cash": 14946.82,
    "return": -0.00357,
    "worst_drop": -0.01122,
@@ -63,24 +63,24 @@
   {
    "id": "rotation",
    "name": "Rotation (top 3 of 19 ETFs)",
-   "value": 14441.95,
-   "share": 0.1466,
+   "value": 14453.56,
+   "share": 0.1467,
    "cash": 300.01,
-   "return": -0.03723,
+   "return": -0.03646,
    "worst_drop": -0.07283,
-   "day_change": 0.00492,
+   "day_change": 0.00573,
    "holdings": {
     "EEM": {
      "shares": 74.250165,
-     "value": 4691.5
+     "value": 4698.18
     },
     "QQQ": {
      "shares": 6.561076,
-     "value": 4737.23
+     "value": 4738.93
     },
     "XLK": {
      "shares": 24.807693,
-     "value": 4713.21
+     "value": 4716.44
     }
    },
    "traded_today": false
@@ -88,20 +88,20 @@
   {
    "id": "balanced",
    "name": "Balanced (60% SPY, 40% bonds)",
-   "value": 15069.26,
-   "share": 0.153,
+   "value": 15066.34,
+   "share": 0.1529,
    "cash": 300.01,
-   "return": 0.00459,
+   "return": 0.00439,
    "worst_drop": -0.00733,
-   "day_change": 0.00049,
+   "day_change": 0.0003,
    "holdings": {
     "IEF": {
      "shares": 65.722226,
-     "value": 5972.84
+     "value": 5970.21
     },
     "SPY": {
      "shares": 11.405989,
-     "value": 8796.41
+     "value": 8796.13
     }
    },
    "traded_today": false
@@ -110,7 +110,7 @@
  "benchmark": {
   "id": "spy",
   "name": "SPY buy and hold",
-  "return": -0.00783,
+  "return": -0.00787,
   "worst_drop": -0.02376
  },
  "recent": [
@@ -293,7 +293,7 @@
    0.96445,
    0.97229,
    0.98053,
-   0.98238
+   0.98254
   ],
   "trend": [
    1.0,
@@ -311,7 +311,7 @@
    0.96445,
    0.97229,
    0.98053,
-   0.98238
+   0.98254
   ],
   "dip": [
    1.0,
@@ -347,7 +347,7 @@
    0.93843,
    0.94561,
    0.95805,
-   0.96277
+   0.96354
   ],
   "balanced": [
    1.0,
@@ -365,7 +365,7 @@
    0.99684,
    1.00104,
    1.00409,
-   1.00459
+   1.00439
   ],
   "spy": [
    1.0,
@@ -383,7 +383,7 @@
    0.97787,
    0.98447,
    0.99007,
-   0.99217
+   0.99213
   ]
  }
 }
