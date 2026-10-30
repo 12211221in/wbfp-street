@@ -1,24 +1,24 @@
 {
- "updated_utc": "2026-10-30 20:21",
+ "updated_utc": "2026-10-30 21:21",
  "day": "2026-10-30",
  "mode": "practice",
  "started": "2026-10-07",
  "days": 18,
- "total_value": 96099.04,
+ "total_value": 96099.23,
  "bots": [
   {
    "id": "core",
    "name": "Core (50% SPY, 50% QQQ, held)",
-   "value": 38091.91,
+   "value": 38089.29,
    "share": 0.3964,
    "cash": 800.02,
-   "return": -0.04773,
-   "worst_drop": -0.054,
-   "day_change": -0.01725,
+   "return": -0.04779,
+   "worst_drop": -0.05407,
+   "day_change": -0.01732,
    "holdings": {
     "QQQ": {
      "shares": 26.244304,
-     "value": 18129.83
+     "value": 18127.2
     },
     "SPY": {
      "shares": 25.346642,
@@ -30,16 +30,16 @@
   {
    "id": "trend",
    "name": "Trend (SPY and QQQ, 200-day filter)",
-   "value": 14284.47,
+   "value": 14283.48,
    "share": 0.1486,
    "cash": 300.01,
-   "return": -0.04773,
-   "worst_drop": -0.054,
-   "day_change": -0.01725,
+   "return": -0.04779,
+   "worst_drop": -0.05407,
+   "day_change": -0.01732,
    "holdings": {
     "QQQ": {
      "shares": 9.841614,
-     "value": 6798.69
+     "value": 6797.7
     },
     "SPY": {
      "shares": 9.504991,
@@ -63,20 +63,20 @@
   {
    "id": "rotation",
    "name": "Rotation (top 3 of 19 ETFs)",
-   "value": 13822.89,
-   "share": 0.1438,
+   "value": 13826.69,
+   "share": 0.1439,
    "cash": 300.01,
-   "return": -0.0785,
-   "worst_drop": -0.08612,
-   "day_change": -0.02952,
+   "return": -0.07825,
+   "worst_drop": -0.08587,
+   "day_change": -0.02926,
    "holdings": {
     "EEM": {
      "shares": 74.250165,
-     "value": 4531.49
+     "value": 4535.94
     },
     "QQQ": {
      "shares": 6.561076,
-     "value": 4532.46
+     "value": 4531.8
     },
     "XLK": {
      "shares": 24.807693,
@@ -297,7 +297,7 @@
    0.98053,
    0.97959,
    0.96899,
-   0.95227
+   0.95221
   ],
   "trend": [
    1.0,
@@ -317,7 +317,7 @@
    0.98053,
    0.97959,
    0.96899,
-   0.95227
+   0.95221
   ],
   "dip": [
    1.0,
@@ -357,7 +357,7 @@
    0.95805,
    0.96409,
    0.94953,
-   0.9215
+   0.92175
   ],
   "balanced": [
    1.0,
