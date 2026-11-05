@@ -1,28 +1,28 @@
 {
- "updated_utc": "2026-11-05 20:31",
+ "updated_utc": "2026-11-05 21:27",
  "day": "2026-11-05",
  "mode": "practice",
  "started": "2026-10-07",
  "days": 22,
- "total_value": 92640.34,
+ "total_value": 92364.28,
  "bots": [
   {
    "id": "core",
    "name": "Core (50% SPY, 50% QQQ, held)",
-   "value": 36444.87,
+   "value": 36336.04,
    "share": 0.3934,
    "cash": 800.02,
-   "return": -0.0889,
-   "worst_drop": -0.09491,
-   "day_change": -0.05124,
+   "return": -0.09162,
+   "worst_drop": -0.09761,
+   "day_change": -0.05408,
    "holdings": {
     "QQQ": {
      "shares": 26.244304,
-     "value": 17047.25
+     "value": 17007.62
     },
     "SPY": {
      "shares": 25.346642,
-     "value": 18597.59
+     "value": 18528.4
     }
    },
    "traded_today": false
@@ -30,20 +30,20 @@
   {
    "id": "trend",
    "name": "Trend (SPY and QQQ, 200-day filter)",
-   "value": 13666.82,
+   "value": 13626.01,
    "share": 0.1475,
    "cash": 300.01,
-   "return": -0.0889,
-   "worst_drop": -0.09491,
-   "day_change": -0.05124,
+   "return": -0.09162,
+   "worst_drop": -0.09761,
+   "day_change": -0.05408,
    "holdings": {
     "QQQ": {
      "shares": 9.841614,
-     "value": 6392.72
+     "value": 6377.86
     },
     "SPY": {
      "shares": 9.504991,
-     "value": 6974.1
+     "value": 6948.15
     }
    },
    "traded_today": false
@@ -51,16 +51,16 @@
   {
    "id": "dip",
    "name": "Dip buyer (RSI on SPY, QQQ, AAPL)",
-   "value": 14669.77,
-   "share": 0.1584,
+   "value": 14659.17,
+   "share": 0.1587,
    "cash": 10110.83,
-   "return": -0.02204,
-   "worst_drop": -0.02662,
-   "day_change": -0.0204,
+   "return": -0.02275,
+   "worst_drop": -0.02732,
+   "day_change": -0.02111,
    "holdings": {
     "QQQ": {
      "shares": 7.018499,
-     "value": 4558.94
+     "value": 4548.34
     }
    },
    "traded_today": true
@@ -68,12 +68,12 @@
   {
    "id": "rotation",
    "name": "Rotation (top 3 of 19 ETFs)",
-   "value": 13139.24,
-   "share": 0.1418,
+   "value": 13059.81,
+   "share": 0.1414,
    "cash": 366.53,
-   "return": -0.12408,
-   "worst_drop": -0.13132,
-   "day_change": -0.03891,
+   "return": -0.12937,
+   "worst_drop": -0.13657,
+   "day_change": -0.04472,
    "holdings": {
     "QQQ": {
      "shares": -2e-06,
@@ -81,15 +81,15 @@
     },
     "XLE": {
      "shares": 66.517591,
-     "value": 4145.04
+     "value": 4099.48
     },
     "XLK": {
      "shares": 24.807693,
-     "value": 4046.01
+     "value": 4012.64
     },
     "XLV": {
      "shares": 24.764375,
-     "value": 4581.66
+     "value": 4581.16
     }
    },
    "traded_today": false
@@ -97,20 +97,20 @@
   {
    "id": "balanced",
    "name": "Balanced (60% SPY, 40% bonds)",
-   "value": 14719.64,
-   "share": 0.1589,
+   "value": 14683.25,
+   "share": 0.159,
    "cash": 300.01,
-   "return": -0.01872,
-   "worst_drop": -0.02325,
-   "day_change": -0.02325,
+   "return": -0.02114,
+   "worst_drop": -0.02567,
+   "day_change": -0.02567,
    "holdings": {
     "IEF": {
      "shares": 65.722226,
-     "value": 6050.72
+     "value": 6045.46
     },
     "SPY": {
      "shares": 11.405989,
-     "value": 8368.92
+     "value": 8337.78
     }
    },
    "traded_today": false
@@ -119,8 +119,8 @@
  "benchmark": {
   "id": "spy",
   "name": "SPY buy and hold",
-  "return": -0.05605,
-  "worst_drop": -0.05763
+  "return": -0.05957,
+  "worst_drop": -0.06113
  },
  "recent": [
   {
@@ -413,7 +413,7 @@
    0.94409,
    0.94932,
    0.96031,
-   0.9111
+   0.90838
   ],
   "trend": [
    1.0,
@@ -437,7 +437,7 @@
    0.94409,
    0.94932,
    0.96031,
-   0.9111
+   0.90838
   ],
   "dip": [
    1.0,
@@ -461,7 +461,7 @@
    0.98674,
    0.99045,
    0.99832,
-   0.97796
+   0.97725
   ],
   "rotation": [
    1.0,
@@ -485,7 +485,7 @@
    0.91571,
    0.91587,
    0.91139,
-   0.87592
+   0.87063
   ],
   "balanced": [
    1.0,
@@ -509,7 +509,7 @@
    0.99317,
    0.99297,
    1.00464,
-   0.98128
+   0.97886
   ],
   "spy": [
    1.0,
@@ -533,7 +533,7 @@
    0.96876,
    0.9704,
    0.98662,
-   0.94395
+   0.94043
   ]
  }
 }
