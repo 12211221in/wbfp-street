@@ -1,28 +1,28 @@
 {
- "updated_utc": "2026-11-19 21:52",
- "day": "2026-11-19",
+ "updated_utc": "2026-11-20 21:34",
+ "day": "2026-11-20",
  "mode": "practice",
  "started": "2026-10-07",
- "days": 32,
- "total_value": 91089.57,
+ "days": 33,
+ "total_value": 88690.83,
  "bots": [
   {
    "id": "core",
    "name": "Core (50% SPY, 50% QQQ, held)",
-   "value": 35817.46,
-   "share": 0.3932,
+   "value": 34437.39,
+   "share": 0.3883,
    "cash": 800.02,
-   "return": -0.10459,
-   "worst_drop": -0.11049,
-   "day_change": -0.02237,
+   "return": -0.13909,
+   "worst_drop": -0.14476,
+   "day_change": -0.03853,
    "holdings": {
     "QQQ": {
      "shares": 26.244304,
-     "value": 16930.07
+     "value": 16060.99
     },
     "SPY": {
      "shares": 25.346642,
-     "value": 18087.36
+     "value": 17576.38
     }
    },
    "traded_today": false
@@ -30,20 +30,20 @@
   {
    "id": "trend",
    "name": "Trend (SPY and QQQ, 200-day filter)",
-   "value": 13227.66,
-   "share": 0.1452,
+   "value": 12705.2,
+   "share": 0.1433,
    "cash": 0.0,
-   "return": -0.11818,
-   "worst_drop": -0.12399,
-   "day_change": -0.02287,
+   "return": -0.15301,
+   "worst_drop": -0.15859,
+   "day_change": -0.0395,
    "holdings": {
     "QQQ": {
      "shares": 9.990615,
-     "value": 6444.9
+     "value": 6114.06
     },
     "SPY": {
      "shares": 9.504991,
-     "value": 6782.76
+     "value": 6591.14
     }
    },
    "traded_today": false
@@ -52,7 +52,7 @@
    "id": "dip",
    "name": "Dip buyer (RSI on SPY, QQQ, AAPL)",
    "value": 14838.49,
-   "share": 0.1629,
+   "share": 0.1673,
    "cash": 14838.49,
    "return": -0.0108,
    "worst_drop": -0.02732,
@@ -63,12 +63,12 @@
   {
    "id": "rotation",
    "name": "Rotation (top 3 of 19 ETFs)",
-   "value": 12799.72,
-   "share": 0.1405,
+   "value": 12487.45,
+   "share": 0.1408,
    "cash": 366.53,
-   "return": -0.14671,
-   "worst_drop": -0.15377,
-   "day_change": -0.01495,
+   "return": -0.16753,
+   "worst_drop": -0.17441,
+   "day_change": -0.0244,
    "holdings": {
     "QQQ": {
      "shares": -2e-06,
@@ -76,15 +76,15 @@
     },
     "XLE": {
      "shares": 66.517591,
-     "value": 4050.92
+     "value": 4029.64
     },
     "XLK": {
      "shares": 24.807693,
-     "value": 3987.09
+     "value": 3699.57
     },
     "XLV": {
      "shares": 24.764375,
-     "value": 4395.18
+     "value": 4391.71
     }
    },
    "traded_today": false
@@ -92,20 +92,20 @@
   {
    "id": "balanced",
    "name": "Balanced (60% SPY, 40% bonds)",
-   "value": 14406.24,
-   "share": 0.1582,
+   "value": 14222.3,
+   "share": 0.1604,
    "cash": 300.01,
-   "return": -0.03961,
-   "worst_drop": -0.04405,
-   "day_change": -0.01337,
+   "return": -0.05187,
+   "worst_drop": -0.05625,
+   "day_change": -0.01277,
    "holdings": {
     "IEF": {
      "shares": 65.722226,
-     "value": 5966.92
+     "value": 6012.93
     },
     "SPY": {
      "shares": 11.405989,
-     "value": 8139.31
+     "value": 7909.37
     }
    },
    "traded_today": false
@@ -114,8 +114,8 @@
  "benchmark": {
   "id": "spy",
   "name": "SPY buy and hold",
-  "return": -0.08195,
-  "worst_drop": -0.08348
+  "return": -0.10789,
+  "worst_drop": -0.10938
  },
  "recent": [
   {
@@ -427,7 +427,8 @@
    "2026-11-16",
    "2026-11-17",
    "2026-11-18",
-   "2026-11-19"
+   "2026-11-19",
+   "2026-11-20"
   ],
   "core": [
    1.0,
@@ -461,7 +462,8 @@
    0.92301,
    0.91622,
    0.9159,
-   0.89541
+   0.89541,
+   0.86091
   ],
   "trend": [
    1.0,
@@ -495,7 +497,8 @@
    0.90958,
    0.90275,
    0.90245,
-   0.88182
+   0.88182,
+   0.84699
   ],
   "dip": [
    1.0,
@@ -522,6 +525,7 @@
    0.97725,
    0.98111,
    0.99209,
+   0.98921,
    0.98921,
    0.98921,
    0.98921,
@@ -563,7 +567,8 @@
    0.88952,
    0.88132,
    0.86625,
-   0.85329
+   0.85329,
+   0.83247
   ],
   "balanced": [
    1.0,
@@ -597,7 +602,8 @@
    0.97808,
    0.97374,
    0.9734,
-   0.96039
+   0.96039,
+   0.94813
   ],
   "spy": [
    1.0,
@@ -631,7 +637,8 @@
    0.95207,
    0.94334,
    0.94059,
-   0.91805
+   0.91805,
+   0.89211
   ]
  }
 }
